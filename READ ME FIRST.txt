@@ -1,0 +1,107 @@
+ETC SCHEDULE MAKER  —  Emerald Triangle Cannabis  (Windows)
+===========================================================
+
+Build the weekly staff schedule and have it checked as you type: thin
+openings, thin closings, long days, long weeks and part-time shifts that
+would need a lunch. Auto-complete fixes a whole week at once.
+
+
+────────────────────────────────────────────────────────────
+WHAT EACH FILE DOES
+────────────────────────────────────────────────────────────
+
+  ETC Schedule Maker.vbs   ← THE LAUNCHER. This is what you click.
+                             It checks GitHub, downloads a newer program if
+                             there is one, then opens it.
+                             *** This file never changes on its own. If the
+                             launcher itself is ever updated, copy the new one
+                             onto each PC — only app.html auto-downloads. ***
+
+  app.html                 ← THE PROGRAM. This is the file that gets updated
+                             automatically.
+
+  version.txt              ← Says which version app.html (above) is.
+
+  icon.ico                 ← The calendar picture for the desktop shortcut.
+
+  app.template.html        ← (for the developer) the source app.html is built
+  build.py                   from. Staff can ignore these two.
+
+  ETC Schedule Maker (Mac).command  ← The launcher for a Mac (same steps as
+                             the Label Maker's Mac notes).
+
+
+────────────────────────────────────────────────────────────
+THE TWO version.txt FILES  (same idea as the Label Maker)
+────────────────────────────────────────────────────────────
+
+  1. The one IN THIS FOLDER describes the app.html sitting next to it — the
+     backup that runs if the internet is down.  >> You never touch it. <<
+
+  2. The one ON GITHUB describes the newest app.html and tells every computer
+     "a new version exists."  >> This is the one you upload when you update. <<
+
+The launcher compares the two numbers and downloads if GitHub is newer.
+
+
+────────────────────────────────────────────────────────────
+INSTALL  (one time, ~1 minute — on each computer)
+────────────────────────────────────────────────────────────
+
+1. Put THIS WHOLE FOLDER somewhere permanent — Documents is a good spot.
+   Keep the files together; the launcher looks for app.html next to it.
+
+2. Double-click  "ETC Schedule Maker.vbs"  once.
+   If Windows SmartScreen warns the first time: "More info" → "Run anyway".
+   The app opens AND a pinnable "ETC Schedule Maker" shortcut is placed on
+   your Desktop automatically.
+
+3. PIN TO TASKBAR (optional): right-click the Desktop shortcut →
+   "Show more options" → "Pin to taskbar" (or drag it onto the taskbar).
+
+Requirements: Google Chrome or Microsoft Edge. Nothing else to install.
+
+Note: the pinnable shortcut is created once per computer. If you delete it and
+want it back, delete  %LocalAppData%\ETCScheduleMaker\shortcut.created  and
+relaunch.
+
+
+────────────────────────────────────────────────────────────
+USING THE PROGRAM
+────────────────────────────────────────────────────────────
+
+• The grid is one week: rows are days, columns are people. Type a shift
+  like 9-6PM or 11:10-8:10PM, or a shortcut letter (O, M, C, A, P). Blank
+  means off. Times are tidied for you: AM blank, PM marked.
+
+• Problems show under the grid and on each day's check button. Click a
+  day's check to see it hour by hour.
+
+• ✨ Auto-complete proposes the fewest changes that clear every problem and
+  shows you the list before applying anything.
+
+• ⚡ Quick edit at the top: type  9/26 Kari 3:10PM-8:10PM  or  9/27 Omar off
+  and press Enter.
+
+• Save / Open (right side) write and read schedule files on this PC. A file
+  holds every week in the tabs plus names, rules and hours. Ctrl+S saves.
+
+• Print checks the week first and lets you print anyway if you choose.
+
+• Settings (right side): the staffing rules, store hours per day, and the
+  shift shortcuts. Each person is a Manager (never counted, no hour limits),
+  Full time, or Part time (5 hours or less a day, no lunch).
+
+Your saved schedules live on this computer. Each computer running the
+program has its own — use Save and send the file if another PC needs it.
+
+
+────────────────────────────────────────────────────────────
+HOW TO SHIP AN UPDATE  (owner only)
+────────────────────────────────────────────────────────────
+
+1. Edit app.template.html (or have Claude do it), then run:  python build.py
+2. Bump the number in version.txt (e.g. 1.0.0 → 1.0.1) and build again.
+3. Upload app.html AND version.txt to the GitHub repo
+   (madisonhypes/etc-schedule-maker). Every computer picks it up on the
+   next launch. The version badge at the top-left shows which one is running.
