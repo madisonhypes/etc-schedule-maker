@@ -224,12 +224,22 @@ Sub EnsurePinnableShortcut()
     fso.DeleteFile lnkPath, True
   End If
 
+  ' Give the shortcut its own copy of the icon, named after the file's size, so a
+  ' replaced icon.ico gets a new path and Explorer can't keep showing a cached picture.
+  Dim iconUse : iconUse = ""
+  If fso.FileExists(iconPath) Then
+    Dim icoFile : Set icoFile = fso.GetFile(iconPath)
+    iconUse = support & "\icon-" & icoFile.Size & ".ico"
+    If Not fso.FileExists(iconUse) Then fso.CopyFile iconPath, iconUse, True
+    If Not fso.FileExists(iconUse) Then iconUse = iconPath
+  End If
+
   Dim lnk : Set lnk = shell.CreateShortcut(lnkPath)
   If Err.Number <> 0 Then Exit Sub
   lnk.TargetPath = shell.ExpandEnvironmentStrings("%SystemRoot%") & "\System32\wscript.exe"
   lnk.Arguments = """" & WScript.ScriptFullName & """"
   lnk.WorkingDirectory = scriptDir
-  If fso.FileExists(iconPath) Then lnk.IconLocation = iconPath & ",0"
+  If Len(iconUse) > 0 Then lnk.IconLocation = iconUse & ",0"
   lnk.Description = "ETC Schedule Maker - Emerald Triangle Cannabis"
   lnk.Save
 
