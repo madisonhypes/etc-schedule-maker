@@ -210,13 +210,19 @@ End Function
 Sub EnsurePinnableShortcut()
   On Error Resume Next
   Dim marker : marker = support & "\shortcut.created"
-  If fso.FileExists(marker) Then Exit Sub
 
   Dim desktop : desktop = shell.SpecialFolders("Desktop")
   If Len(desktop) = 0 Then Exit Sub
 
   Dim lnkPath : lnkPath = desktop & "\ETC Schedule Maker.lnk"
   Dim iconPath : iconPath = scriptDir & "\icon.ico"
+
+  ' Already made once and since removed by the user -> leave it alone.
+  ' Still on the Desktop -> rebuild it so a new icon.ico or a moved folder is picked up.
+  If fso.FileExists(marker) Then
+    If Not fso.FileExists(lnkPath) Then Exit Sub
+    fso.DeleteFile lnkPath, True
+  End If
 
   Dim lnk : Set lnk = shell.CreateShortcut(lnkPath)
   If Err.Number <> 0 Then Exit Sub
