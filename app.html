@@ -175,7 +175,7 @@
   table.week tr.hrsrow td.date { font: 700 14px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .5px; white-space: normal; line-height: 1.1; }
 
   /* problems */
-  #probCard { margin-bottom: 12px; border-radius: 14px 22px 12px 20px; }
+  #probCard { margin-bottom: 12px; border-radius: 14px 22px 12px 20px; position: sticky; top: 8px; z-index: 6; }
   #probCard .body { padding: 10px 14px 10px; }
   #probCard .banner { padding: 8px 14px; font-size: 17px; }
   #probCard ul.probs { flex-direction: row; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 118px; overflow: auto; padding-right: 4px; }
@@ -283,7 +283,7 @@
     body { background: #fff; color: #000; font-size: 9pt; } body::before, body::after { display: none; }
     .top, .quick, aside, .hint, .rangebar, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub, #startScreen, #yearCard, button.ot:not(.on), button.so, .grab { display: none !important; }
     main { display: block; padding: 0; }
-    .card, .card:nth-child(even) { box-shadow: none; margin: 0; border: none; border-radius: 0; overflow: visible; }
+    .card, .card:nth-child(even) { box-shadow: none; margin: 0; border: none; border-radius: 0; overflow: visible; position: static; }
     .card > h2 { display: none; }
     .print-only { display: block; font: 800 15pt var(--serif); padding: 0 0 4pt; color: #000; }
     .wrap { overflow: visible; padding: 0; }
@@ -314,7 +314,7 @@
 
 <div class="top">
   <h1>ETC Schedule Maker<svg class="stroke" viewBox="0 0 300 12" preserveAspectRatio="none"><path d="M2 8 C 60 2, 120 11, 180 6 S 260 3, 298 7" fill="none" stroke="#e5643f" stroke-width="5" stroke-linecap="round"/></svg></h1>
-  <span class="ver" title="Program version">v1.7.2</span>
+  <span class="ver" title="Program version">v1.7.4</span>
   <span class="tag">thin openings, thin closings &amp; long weeks, caught before they happen</span>
   <div class="actions" id="topActions">
     <button id="autoBtn" class="primary">✨ Auto-complete</button>
@@ -500,7 +500,7 @@
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '1.7.2';
+  const APP_VERSION = '1.7.4';
   const LS_STATE = 'schedchk.state.v4', LS_VERS = 'schedchk.versions.v4';
   const OLD_VERS = ['schedchk.versions.v3', 'schedchk.versions.v2'];
   const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -907,7 +907,7 @@
       h += `<th class="emp ${e.type === 'manager' ? 'mgr' : e.type === 'owner' ? 'owner' : e.type === 'part' ? 'part' : ''}"><input class="nm" type="text" data-emp="${i}" value="${esc(e.name)}" title="Click to rename"><div class="sub"><select data-type="${i}" title="Employee type">${Object.keys(TYPES).map((k) => `<option value="${k}" ${e.type === k ? 'selected' : ''}>${TYPES[k]}</option>`).join('')}</select><button class="x" data-del="${i}" title="Remove ${esc(e.name)}">×</button></div></th>`;
     });
     h += '<th>Check</th></tr></thead><tbody>';
-    const hoursRow = (ws) => { const { tot, cap } = weekHours(ws); return `<tr class="hrsrow"><td class="date">Hours<br>wk of ${md(ws)}</td>` + S.employees.map((e) => `<td class="hrs ${!limited(e) ? 'mgr' : ''} ${limited(e) && cap[e.id] > R().maxWeek * 60 ? 'over' : ''}" title="${!limited(e) ? 'No hour limits for ' + TYPES[e.type].toLowerCase() : 'Paid hours this pay week' + (cap[e.id] !== tot[e.id] ? ' (' + hrs(tot[e.id]) + ' worked, overtime approved)' : '')}">${tot[e.id] ? hrs(cap[e.id]) : '–'}</td>`).join('') + '<td></td></tr>'; };
+    const hoursRow = (ws) => { const { tot, cap } = weekHours(ws); return `<tr class="hrsrow"><td class="date">Hours<br>wk of ${md(ws)}</td>` + S.employees.map((e) => `<td class="hrs ${!limited(e) ? 'mgr' : ''} ${limited(e) && cap[e.id] > R().maxWeek * 60 ? 'over' : ''}" title="${!limited(e) ? TYPES[e.type] + ' — no hour limits (' + (tot[e.id] ? hrs(tot[e.id]) : '0h') + ' worked)' : 'Paid hours this pay week' + (cap[e.id] !== tot[e.id] ? ' (' + hrs(tot[e.id]) + ' worked, overtime approved)' : '')}">${!limited(e) ? 'no limit' : (tot[e.id] ? hrs(cap[e.id]) : '–')}</td>`).join('') + '<td></td></tr>'; };
     dates.forEach((day, di) => {
       const d = dow(day), { info, probs } = RP.byDay[day];
       const first = di > 0 && wkStart(day) === day;
@@ -915,8 +915,8 @@
       S.employees.forEach((e) => {
         const txt = cellText(day, e.id), p = info.shifts[e.id], bad = probs.some((x) => (x.type === 'hours' || x.type === 'low') && x.id === e.id), off = isOff(day, e.id), ot = isOT(day, e.id), so = isSO(day, e.id);
         const cls = p ? (p.error ? 'unread' : presetClass(p)) : '';
-        const title = (p && !p.error ? shiftText(p) + ' · ' + hrs(worked(p, e)) + (e.type === 'part' ? ' on the clock' : ' after lunch') : (p ? 'Not understood' : (so ? 'Scheduled off' : 'Off'))) + (off ? ' · asked for this day off' : '') + (ot ? ' · overtime approved' : '');
-        h += `<td class="shift ${e.type === 'manager' ? 'mgr' : ''}"><input type="text" data-day="${day}" data-id="${e.id}" class="${cls} ${bad ? 'bad' : ''} ${off ? 'offreq' : ''} ${so ? 'schedoff' : ''}" value="${esc(txt)}" placeholder="${off ? 'asked off' : so ? 'scheduled off' : ''}" title="${esc(title)}">${so ? '' : `<button class="ot ${ot ? 'on' : ''}" data-ot="${day}" data-id="${e.id}" title="${ot ? 'Overtime approved for ' + esc(e.name) + ' this day — click to remove' : 'Approve overtime for ' + esc(e.name) + ' this day'}">${ot ? '✓ OT' : 'OT'}</button>`}${txt ? `<span class="grab" draggable="true" data-day="${day}" data-id="${e.id}" title="Drag this shift to another cell to move it (hold Ctrl to copy). Dropping on a filled cell swaps the two.">⠿</span>` : ''}<button class="so ${so ? 'on' : ''}" data-so="${day}" data-id="${e.id}" title="${so ? esc(e.name) + ' is scheduled off this day — click to put the usual shift back' : 'Schedule ' + esc(e.name) + ' off this day'}">${so ? '✓ off' : 'off'}</button></td>`;
+        const title = (p && !p.error ? shiftText(p) + ' · ' + hrs(worked(p, e)) + (e.type === 'part' ? ' on the clock' : ' after lunch') + (!limited(e) ? ' · ' + TYPES[e.type] + ', no hour limits' : '') : (p ? 'Not understood' : (so ? 'Scheduled off' : 'Off'))) + (off ? ' · asked for this day off' : '') + (ot ? ' · overtime approved' : '');
+        h += `<td class="shift ${e.type === 'manager' ? 'mgr' : ''}"><input type="text" data-day="${day}" data-id="${e.id}" class="${cls} ${bad ? 'bad' : ''} ${off ? 'offreq' : ''} ${so ? 'schedoff' : ''}" value="${esc(txt)}" placeholder="${off ? 'asked off' : so ? 'scheduled off' : ''}" title="${esc(title)}">${so || !limited(e) ? '' : `<button class="ot ${ot ? 'on' : ''}" data-ot="${day}" data-id="${e.id}" title="${ot ? 'Overtime approved for ' + esc(e.name) + ' this day — click to remove' : 'Approve overtime for ' + esc(e.name) + ' this day'}">${ot ? '✓ OT' : 'OT'}</button>`}${txt ? `<span class="grab" draggable="true" data-day="${day}" data-id="${e.id}" title="Drag this shift to another cell to move it (hold Ctrl to copy). Dropping on a filled cell swaps the two.">⠿</span>` : ''}<button class="so ${so ? 'on' : ''}" data-so="${day}" data-id="${e.id}" title="${so ? esc(e.name) + ' is scheduled off this day — click to put the usual shift back' : 'Schedule ' + esc(e.name) + ' off this day'}">${so ? '✓ off' : 'off'}</button></td>`;
       });
       const stTitle = probs.length ? probs.map((x) => '• ' + probText(x)).join('\n') : 'Openings, closings and hours all fine';
       const stText = !probs.length ? '✓ OK' : probs.length === 1 ? probShort(probs[0]) : probs.length + ' problems';
