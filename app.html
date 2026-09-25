@@ -27,7 +27,7 @@
     radial-gradient(400px 300px at 0% 90%, rgba(106, 76, 147, .16), transparent 70%); }
   body::after { content: ''; position: fixed; inset: 0; z-index: -1; opacity: .5; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   button, input, select { font: inherit; color: inherit; }
-  input[type=text], input[type=time], input[type=number], select { padding: 6px 10px; border: 2px solid var(--line); border-radius: 10px; background: #fff; }
+  input[type=text], input[type=time], input[type=number], input[type=date], select { padding: 6px 10px; border: 2px solid var(--line); border-radius: 10px; background: #fff; }
   input:focus, select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(42, 157, 143, .25); }
   input[type=number] { width: 66px; }
   button { padding: 8px 16px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; color: var(--ink); cursor: pointer; font-weight: 800; box-shadow: 3px 3px 0 var(--ink); transition: transform .08s, box-shadow .08s, background .15s; white-space: nowrap; }
@@ -36,12 +36,14 @@
   button.primary { background: var(--coral); color: #fff; }
   button.primary:hover { background: var(--coral-dk); }
   button.teal { background: var(--teal); color: #fff; }
+  button.mustard { background: var(--mustard); }
   button.danger { background: #fff; color: var(--coral-dk); }
   button.ghost { border-color: transparent; box-shadow: none; background: transparent; color: var(--muted); }
   button.ghost:hover { background: var(--soft); color: var(--ink); transform: none; box-shadow: none; }
   button.small { padding: 5px 12px; font-size: 13px; box-shadow: 2px 2px 0 var(--ink); }
   button.small:hover { box-shadow: 3px 3px 0 var(--ink); }
   button.small.ghost, button.small.ghost:hover { box-shadow: none; }
+  button.big { padding: 12px 22px; font-size: 17px; }
   .x { border: none; background: transparent; color: var(--muted); cursor: pointer; padding: 0 4px; font-size: 16px; line-height: 1; border-radius: 6px; box-shadow: none; }
   .x:hover { color: var(--coral-dk); background: transparent; transform: none; box-shadow: none; }
 
@@ -68,6 +70,7 @@
 
   main { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; padding: 18px 28px 48px; align-items: start; }
   @media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
+  main.wide { grid-template-columns: 1fr; }
   .card { background: var(--card); border: 2px solid var(--ink); border-radius: 22px 14px 20px 12px; box-shadow: var(--cut); margin-bottom: 20px; overflow: hidden; }
   .card:nth-child(even) { border-radius: 14px 22px 12px 20px; }
   .card > h2 { font: 800 22px var(--serif); margin: 0; padding: 14px 20px 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -75,11 +78,36 @@
   .hint { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
   .hint kbd { background: var(--soft); border-radius: 6px; padding: 1px 6px; font-family: inherit; font-weight: 800; border: 1px solid var(--line); }
 
-  /* tabs */
-  .tabs { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .tabs button { background: #fff; padding: 6px 16px; font-family: var(--serif); font-size: 15px; }
-  .tabs button.active { background: var(--mustard); }
-  .tabs button .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--coral); margin-left: 8px; vertical-align: 1px; border: 1.5px solid var(--ink); }
+  /* start screen */
+  .start { max-width: 1040px; margin: 30px auto; }
+  .start .mini { overflow-x: auto; margin: 0 -6px; }
+  table.mini { border-collapse: separate; border-spacing: 3px; font-size: 11px; }
+  table.mini th { font: 800 12px var(--serif); padding: 2px 4px; }
+  table.mini td { padding: 3px 6px; text-align: center; border-radius: 8px 5px 8px 5px; background: var(--soft); color: var(--muted); font-weight: 700; white-space: nowrap; min-width: 84px; }
+  table.mini td.d { text-align: left; background: transparent; font: 800 12px var(--serif); color: var(--ink); min-width: 0; padding-left: 0; }
+  table.mini td.d small { color: var(--muted); font: 700 9px var(--sans); text-transform: uppercase; margin-right: 4px; }
+  table.mini td.p0 { background: var(--sky); color: var(--sky-ink); } table.mini td.p1 { background: var(--plum-lt); color: var(--plum-ink); } table.mini td.p2 { background: var(--coral-lt); color: var(--coral-ink); } table.mini td.p3 { background: var(--mint); color: var(--mint-ink); } table.mini td.p4 { background: var(--mustard-lt); color: var(--mustard-ink); } table.mini td.has { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  table.mini td.offreq { border: 1.5px dashed var(--coral); background: #fff; color: var(--coral-ink); font-style: italic; }
+  table.mini td.so { background: repeating-linear-gradient(45deg, #f4efe4 0 6px, #ebe4d5 6px 7px); color: var(--plum-ink); }
+  table.mini td.bad { outline: 2px solid var(--coral); }
+  table.mini tr.wk2 td { border-top: 2px dashed var(--line); }
+  table.mini td.chk { min-width: 0; font-size: 10px; }
+  table.mini td.chk.ok { background: var(--teal-lt); color: var(--teal-ink); } table.mini td.chk.bad { background: var(--coral-lt); color: var(--coral-ink); outline: none; }
+  .start .body { padding: 10px 28px 28px; }
+  .start h2 { font-size: 30px !important; padding: 22px 28px 4px !important; }
+  .start .sub { color: var(--muted); font-style: italic; font-family: var(--serif); font-size: 17px; margin: 0 0 16px; }
+  .start .pick { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .start .pick input[type=date] { font-size: 17px; padding: 9px 14px; }
+  .start .range { font: 800 22px var(--serif); margin: 6px 0 18px; }
+  .start .range small { display: block; font: 600 13px var(--sans); color: var(--muted); }
+  .start .row { gap: 10px; }
+  .start .alt { border-top: 2px solid var(--line); margin-top: 18px; padding-top: 16px; }
+  .start .alt p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+
+  /* range bar */
+  .rangebar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .rangebar .lab { font: 800 22px var(--serif); padding: 0 6px; }
+  .rangebar .lab small { display: block; font: 700 11px var(--sans); color: var(--muted); letter-spacing: .5px; text-transform: uppercase; }
   .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* week grid */
@@ -93,12 +121,16 @@
   table.week th.emp .sub { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 3px; }
   table.week th.emp select { font-size: 11px; padding: 2px 6px; border-radius: 999px; border: 1.5px solid var(--ink); color: var(--ink); background: #fff; font-weight: 800; }
   table.week th.emp.mgr select { background: var(--plum-lt); color: var(--plum-ink); }
+  table.week th.emp.owner select { background: var(--teal-lt); color: var(--teal-ink); }
   table.week th.emp.part select { background: var(--mustard-lt); color: var(--mustard-ink); }
   table.week td { padding: 0; }
   table.week td.date { white-space: nowrap; font: 800 17px var(--serif); padding: 0 12px 0 4px; text-align: left; }
   table.week td.date small { color: var(--muted); font: 700 11px var(--sans); display: block; line-height: 1; letter-spacing: .5px; text-transform: uppercase; }
   table.week tr.today td.date { color: var(--coral-dk); }
+  table.week tr.wkfirst td { border-top: 2px dashed var(--line); padding-top: 4px; }
+  table.week td.shift { position: relative; }
   table.week td.shift input { width: 100%; min-width: 106px; text-align: center; border: 2px solid transparent; background: var(--soft); border-radius: 12px 8px 12px 8px; padding: 7px 4px; font-weight: 800; font-size: 13.5px; color: var(--muted); }
+  table.week td.shift input::placeholder { color: var(--coral); font-style: italic; font-weight: 700; }
   table.week td.shift input:hover { border-color: var(--line); }
   table.week td.shift input:focus { border-color: var(--ink); background: #fff; box-shadow: none; color: var(--ink); }
   table.week td.shift input.has { color: var(--ink); background: #fff; border-color: var(--line); }
@@ -109,9 +141,20 @@
   table.week td.shift input.p4 { background: var(--mustard-lt); color: var(--mustard-ink); }
   table.week td.shift input.bad { background: var(--coral-lt) !important; color: var(--coral-ink) !important; border-color: var(--coral) !important; }
   table.week td.shift input.unread { background: var(--mustard-lt) !important; color: var(--mustard-ink) !important; border-style: dashed !important; border-color: var(--mustard-ink) !important; }
+  table.week td.shift input.offreq { border: 2px dashed var(--coral) !important; background: #fff !important; }
   table.week td.shift.mgr input { opacity: .8; font-style: italic; }
   table.week td.shift input.flash { animation: flash 1.6s ease-out; }
   @keyframes flash { 0% { box-shadow: 0 0 0 4px var(--coral); } 100% { box-shadow: 0 0 0 0 transparent; } }
+  table.week td.shift button.ot { position: absolute; top: -7px; right: -5px; width: 26px; height: 18px; padding: 0; font-size: 9px; letter-spacing: .3px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; box-shadow: none; opacity: 0; transition: opacity .12s; line-height: 1; z-index: 2; }
+  table.week td.shift:hover button.ot { opacity: .75; }
+  table.week td.shift button.ot:hover { opacity: 1; transform: none; box-shadow: none; }
+  table.week td.shift button.ot.on { opacity: 1; background: var(--teal); color: #fff; }
+  table.week td.shift button.so { position: absolute; bottom: -7px; right: -5px; width: 30px; height: 18px; padding: 0; font-size: 9px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; box-shadow: none; opacity: 0; transition: opacity .12s; line-height: 1; z-index: 2; }
+  table.week td.shift:hover button.so { opacity: .75; }
+  table.week td.shift button.so:hover { opacity: 1; transform: none; box-shadow: none; }
+  table.week td.shift button.so.on { opacity: 1; background: var(--plum); color: #fff; width: 38px; }
+  table.week td.shift input.schedoff { background: repeating-linear-gradient(45deg, #f4efe4 0 6px, #ebe4d5 6px 7px) !important; border: 2px solid var(--line) !important; }
+  table.week td.shift input.schedoff::placeholder { color: var(--plum-ink); font-style: normal; }
   table.week td.status { white-space: nowrap; cursor: pointer; font-weight: 800; font-size: 13px; padding: 7px 12px; border-radius: 999px; text-align: center; border: 2px solid var(--ink); }
   table.week td.status.ok { background: var(--teal-lt); color: var(--teal-ink); }
   table.week td.status.bad { background: var(--coral-lt); color: var(--coral-ink); }
@@ -120,7 +163,7 @@
   table.week td.hrs { text-align: center; font-size: 12px; font-weight: 800; color: var(--muted); padding: 4px; }
   table.week td.hrs.over { color: var(--coral-ink); background: var(--coral-lt); border-radius: 8px; }
   table.week td.hrs.mgr { font-weight: 600; opacity: .7; }
-  table.week tr.hrsrow td.date { font: 700 12px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  table.week tr.hrsrow td.date { font: 700 12px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .5px; white-space: normal; line-height: 1.1; }
 
   /* problems */
   .banner { padding: 12px 16px; border-radius: 14px 8px 14px 8px; font-weight: 800; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border: 2px solid var(--ink); }
@@ -133,7 +176,7 @@
   ul.probs li.hours { background: var(--mustard-lt); color: var(--mustard-ink); border-color: var(--mustard); }
   ul.probs li.warn { background: var(--soft); color: var(--muted); border-color: var(--line); }
   ul.probs li:hover { outline: 2px solid currentColor; }
-  ul.probs li b { min-width: 70px; font-weight: 800; font-family: var(--serif); }
+  ul.probs li b { min-width: 86px; font-weight: 800; font-family: var(--serif); }
 
   /* day detail */
   table.day { border-collapse: separate; border-spacing: 0; user-select: none; }
@@ -153,6 +196,28 @@
   table.day td.win { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); padding: 0 8px; white-space: nowrap; }
   table.day tr.closed td.c { background: repeating-linear-gradient(45deg, #f4efe4 0 6px, #ebe4d5 6px 7px); }
   table.day tr.hourline td { border-top: 2px solid var(--line); }
+
+  /* year view */
+  .ywrap { overflow: auto; max-height: 78vh; padding: 0 14px 14px; }
+  table.year { border-collapse: separate; border-spacing: 3px; }
+  table.year thead th { position: sticky; top: 0; background: var(--card); z-index: 2; font: 800 14px var(--serif); padding: 8px 4px; border-bottom: 2px solid var(--ink); }
+  table.year thead th.d, table.year td.date { position: sticky; left: 0; background: var(--card); z-index: 1; text-align: left; }
+  table.year thead th.d { z-index: 3; }
+  table.year td.date { white-space: nowrap; font: 800 14px var(--serif); padding: 0 8px 0 4px; }
+  table.year td.date small { color: var(--muted); font: 700 10px var(--sans); text-transform: uppercase; letter-spacing: .5px; margin-right: 6px; display: inline-block; width: 28px; }
+  table.year td.date button { margin-left: 6px; padding: 0 7px; font-size: 10px; opacity: 0; box-shadow: none; }
+  table.year tr:hover td.date button { opacity: .9; }
+  table.year tr.month td { padding: 14px 4px 4px; font: italic 800 20px var(--serif); color: var(--coral-dk); position: sticky; left: 0; background: var(--card); }
+  table.year tr.wknd td.date { color: var(--plum); }
+  table.year tr.today td.date { color: var(--coral-dk); text-decoration: underline; text-decoration-color: var(--coral); }
+  table.year td.y { min-width: 100px; text-align: center; font-size: 12px; font-weight: 700; padding: 5px 4px; border-radius: 10px 6px 10px 6px; background: var(--soft); color: var(--muted); cursor: pointer; border: 2px solid transparent; user-select: none; }
+  table.year td.y.has { background: #fff; color: var(--ink); border-color: var(--line); }
+  table.year td.y:hover { border-color: var(--ink); }
+  table.year td.y.off { background: var(--coral-lt); color: var(--coral-ink); border: 2px dashed var(--coral); }
+  table.year td.y.mgr { font-style: italic; opacity: .75; }
+  table.year td.y.so { color: var(--plum-ink); background: repeating-linear-gradient(45deg, #f4efe4 0 6px, #ebe4d5 6px 7px); }
+  .ylegend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; font-size: 13px; color: var(--muted); }
+  .ylegend .sw { display: inline-block; width: 30px; height: 18px; border-radius: 6px; vertical-align: middle; margin-right: 4px; }
 
   /* sidebar */
   details { border-top: 2px solid var(--line); }
@@ -188,7 +253,7 @@
   .modal .mfoot { padding: 12px 24px 20px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
   .changes { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
   .changes li { padding: 6px 10px; border-radius: 12px 6px 12px 6px; background: var(--soft); display: flex; gap: 10px; align-items: baseline; }
-  .changes li b { min-width: 64px; font-family: var(--serif); }
+  .changes li b { min-width: 74px; font-family: var(--serif); }
   .changes li .arrow { color: var(--muted); }
   .chip { display: inline-block; padding: 1px 9px; border-radius: 999px; background: #fff; border: 1.5px solid var(--line); font-weight: 800; font-size: 13px; }
   .chip.off { color: var(--muted); font-style: italic; }
@@ -197,14 +262,16 @@
   #toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 10px 20px; border-radius: 999px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 60; font-weight: 800; border: 2px solid var(--mustard); }
   #toast.show { opacity: 1; }
   .print-only { display: none; }
+  [hidden] { display: none !important; }
   @media print {
     body { background: #fff; } body::before, body::after { display: none; }
-    .top, .quick, aside, .hint, .tabs, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub { display: none !important; }
+    .top, .quick, aside, .hint, .rangebar, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub, #startScreen, #yearCard, button.ot:not(.on) { display: none !important; }
     main { display: block; padding: 0; }
     .card { box-shadow: none; margin: 0; border: none; }
     .print-only { display: block; font: 800 22px var(--serif); padding: 0 14px 6px; }
     table.week td.shift input { border: 1px solid #bbb !important; background: #fff !important; color: #000 !important; }
     table.week td.status { border: 1px solid #bbb; }
+    table.week td.shift button.ot.on { opacity: 1; background: #fff; color: #000; border-color: #000; }
   }
 </style>
 </head>
@@ -212,9 +279,9 @@
 
 <div class="top">
   <h1>ETC Schedule Maker<svg class="stroke" viewBox="0 0 300 12" preserveAspectRatio="none"><path d="M2 8 C 60 2, 120 11, 180 6 S 260 3, 298 7" fill="none" stroke="#e5643f" stroke-width="5" stroke-linecap="round"/></svg></h1>
-  <span class="ver" title="Program version">v1.0.0</span>
+  <span class="ver" title="Program version">v1.5.1</span>
   <span class="tag">thin openings, thin closings &amp; long weeks, caught before they happen</span>
-  <div class="actions">
+  <div class="actions" id="topActions">
     <button id="autoBtn" class="primary">✨ Auto-complete</button>
     <button id="printBtn">🖨 Print</button>
     <button id="addEmp">+ Person</button>
@@ -222,32 +289,70 @@
   <div class="file" id="fileLine"></div>
 </div>
 
-<div class="quick">
+<div class="quick" id="quickBar">
   <span class="lbl">⚡ Quick edit</span>
-  <input type="text" id="quick" placeholder="Type a date, a name and a shift —  9/26 Kari 3PM-8:10PM   or   9/27 Omar off" autocomplete="off">
+  <input type="text" id="quick" placeholder="Type a date, a name and a shift —  9/26 Kari 3:10PM-8:10PM  ·  9/27 Omar off  ·  10/3 Dani asked off  ·  9/30 Ivan 9-8:10PM ot" autocomplete="off">
   <button id="quickGo" class="primary">Apply</button>
-  <div class="preview" id="quickPrev">Enter applies it. Names only need the first few letters.</div>
+  <div class="preview" id="quickPrev">Enter applies it. Names only need the first few letters. Add “ot” to approve overtime, or “asked off” to record a day-off request.</div>
 </div>
 
-<main>
+<!-- ===== start screen ===== -->
+<div class="card start" id="startScreen">
+  <h2>Which two weeks?</h2>
+  <div class="body">
+    <p class="sub">Pick the first day and I'll show you that week and the one after it. Days you haven't touched yet follow your usual week.</p>
+    <div class="pick">
+      <label style="font-weight:800">Start on</label>
+      <button class="small" id="startPrev" title="One week earlier">◀</button>
+      <input type="date" id="startDate">
+      <button class="small" id="startNextWk" title="One week later">▶</button>
+      <button class="small" id="startThis">This week</button>
+      <button class="small" id="startNext" title="One week later than what is picked">Next week</button>
+      <span class="hint" style="margin:0" id="startNote"></span>
+    </div>
+    <div class="range" id="startRange"></div>
+    <div class="mini"><table class="mini" id="miniGrid"></table></div>
+    <div id="miniSum" style="margin:6px 0 14px;font-weight:800"></div>
+    <div class="row">
+      <button class="primary big" id="startGo">Open these two weeks →</button>
+    </div>
+    <div class="alt">
+      <p>Or, plan further ahead:</p>
+      <div class="row">
+        <button class="teal" id="startYear">📅 Year calendar — day-off requests</button>
+        <button id="startOpen">📂 Open a saved schedule file…</button>
+      </div>
+      <p class="hint" style="margin-top:14px">Everything you enter is saved on this computer automatically, so the year calendar and your two-week schedules are here next time you open the program. Use Save (on the right) to keep a file copy too.</p>
+    </div>
+  </div>
+</div>
+
+<main id="mainArea">
   <section>
-    <div class="card">
+    <!-- ===== two-week grid ===== -->
+    <div class="card" id="gridCard">
       <h2>
-        <div class="tabs" id="tabs"></div>
+        <div class="rangebar">
+          <button class="small" id="prevRange" title="Back one week">◀</button>
+          <span class="lab" id="rangeLab"></span>
+          <button class="small" id="nextRange" title="Forward one week">▶</button>
+          <button class="small ghost" id="changeDates">Change dates</button>
+          <button class="small teal" id="toYear">📅 Year calendar</button>
+        </div>
         <div class="toolbar">
-          <button class="small" id="fillUsual" title="Fill every empty cell in this week from each person's usual times">Fill from usual</button>
-          <button class="small" id="setUsual" title="Remember this week's shifts as everyone's usual times">Save as usual</button>
-          <button class="small" id="copyDocs" title="Copy this week as a table to paste into Google Docs">Copy for Google Docs</button>
-          <button class="small danger" id="delWeek">Delete week</button>
+          <button class="small" id="fillUsual" title="Put the usual shift back into every empty cell in these two weeks">Fill from usual</button>
+          <button class="small" id="setUsual" title="Remember the first week shown as everyone's usual times">Save as usual</button>
+          <button class="small" id="copyDocs" title="Copy these two weeks as a table to paste into Google Docs">Copy for Google Docs</button>
+          <button class="small danger" id="resetRange" title="Throw away your edits in these two weeks and go back to the usual times (day-off requests are kept)">Reset to usual</button>
         </div>
       </h2>
       <div class="print-only" id="printTitle"></div>
       <div class="wrap"><table class="week" id="week"></table></div>
-      <p class="hint" style="padding: 0 20px 14px">Type shifts like <kbd>9-6PM</kbd> or <kbd>11:10-8:10PM</kbd>, or a shortcut letter. Times get tidied for you: AM stays blank, PM is marked. Blank means off. <kbd>Enter</kbd> moves down a row. Click a day's check to see it hour by hour. Managers are shown but never counted.</p>
+      <p class="hint" style="padding: 0 20px 14px">Type shifts like <kbd>9-6PM</kbd> or <kbd>11:10-8:10PM</kbd>, or a shortcut letter. Blank means off; a dashed red cell means that person asked for the day off. Hover a cell and click <kbd>off</kbd> to schedule that person off for the day, or <kbd>OT</kbd> to approve overtime. <kbd>Enter</kbd> moves down a row. Click a day's check to see it hour by hour.</p>
     </div>
 
     <div class="card" id="probCard">
-      <h2>Problems this week</h2>
+      <h2>Problems in these two weeks</h2>
       <div class="body" id="problems"></div>
     </div>
 
@@ -255,9 +360,29 @@
       <h2><span id="dayTitle"></span><button class="small ghost" id="closeDay">✕ Close</button></h2>
       <div class="body wrap" id="dayBody"></div>
     </div>
+
+    <!-- ===== year view ===== -->
+    <div class="card" id="yearCard" hidden>
+      <h2>
+        <span>📅 Year ahead — day-off requests</span>
+        <div class="toolbar">
+          <button class="small" id="yearBack">← Back to two weeks</button>
+        </div>
+      </h2>
+      <div class="body" style="padding-bottom:8px">
+        <div class="ylegend">
+          <span><span class="sw" style="background:#fff;border:2px solid var(--line)"></span> usual shift</span>
+          <span><span class="sw" style="background:var(--soft)"></span> off</span>
+          <span><span class="sw" style="background:repeating-linear-gradient(45deg,#f4efe4 0 6px,#ebe4d5 6px 7px);border:2px solid var(--line)"></span> scheduled off</span>
+          <span><span class="sw" style="background:var(--coral-lt);border:2px dashed var(--coral)"></span> asked for the day off</span>
+          <span style="margin-left:auto">Click any cell to mark or unmark a day-off request. It's saved right away and shows up in the two-week schedule.</span>
+        </div>
+      </div>
+      <div class="ywrap"><table class="year" id="year"></table></div>
+    </div>
   </section>
 
-  <aside>
+  <aside id="sideBar">
     <div class="card">
       <h2>Schedules</h2>
       <div class="body">
@@ -267,13 +392,50 @@
           <button class="small" id="saveAsBtn">Save as…</button>
           <input type="file" id="importFile" accept=".json,application/json" hidden>
         </div>
-        <p class="hint" style="margin:0 0 12px">Save writes a schedule file on this PC that you can open again later, move, or email. A file holds every week in the tabs plus your names, rules and hours.</p>
+        <p class="hint" style="margin:0 0 12px">Everything is saved on this computer automatically. Save also writes a file you can move, email or open on another PC. A file holds the whole calendar plus names, rules and hours.</p>
         <div class="row" style="margin-top:6px">
           <input type="text" id="verName" placeholder="Name this copy (optional)">
           <button class="small" id="saveVer">Keep a copy here</button>
         </div>
         <ul id="verList"></ul>
         <p class="hint">Copies kept here live in this browser only. <kbd>Ctrl</kbd>+<kbd>S</kbd> saves to your file, <kbd>Ctrl</kbd>+<kbd>O</kbd> opens one.</p>
+      </div>
+      <details id="bakDetails">
+        <summary>Safety copies from before updates</summary>
+        <div class="body">
+          <ul id="bakList"></ul>
+          <p class="hint">When a program update changes how the calendar is stored, the old data is copied here first, untouched, before it is converted. If anything ever looks wrong after an update, Restore brings that copy back (the current calendar is kept as a copy above first). The last three are kept.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="card" id="tplCard">
+      <h2>Week templates</h2>
+      <div class="body">
+        <div class="row" style="align-items:center">
+          <select id="tplSel" style="flex:1;min-width:120px"></select>
+          <button class="x" id="tplRename" title="Rename this template">✎</button>
+          <button class="x" id="tplDelete" title="Delete this template">×</button>
+        </div>
+        <div class="mini" style="margin:0 0 8px"><table class="mini" id="tplPreview"></table></div>
+        <div class="row">
+          <button class="small primary" data-apply="0">Apply to 1st week</button>
+          <button class="small primary" data-apply="1">Apply to 2nd week</button>
+          <button class="small" data-apply="both">Both</button>
+        </div>
+        <div class="row">
+          <button class="small" id="tplNew" title="Start a template from scratch: every day off, ready to fill in">+ New blank template</button>
+          <button class="small" data-savetpl="0">Save 1st week as new…</button>
+          <button class="small" data-savetpl="1">Save 2nd week as new…</button>
+        </div>
+        <div class="row">
+          <button class="small" data-updtpl="0" title="Overwrite the selected template with the 1st week on screen">Update from 1st week</button>
+          <button class="small" data-updtpl="1" title="Overwrite the selected template with the 2nd week on screen">Update from 2nd week</button>
+        </div>
+        <div class="row">
+          <button class="small mustard" id="tplUsual" title="Every day you haven't edited, across the whole calendar, will use this template">Make this the usual week</button>
+        </div>
+        <p class="hint">A template is one pay week. To build one from scratch: <b>+ New blank template</b>, <b>Apply</b> it to a week on screen, fill the week in, then <b>Update</b> the template from that week. The usual week is whichever template you last made usual; untouched days everywhere follow it.</p>
       </div>
     </div>
 
@@ -301,36 +463,15 @@
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '1.0.0';
+  const APP_VERSION = '1.5.1';
   const LS_STATE = 'schedchk.state.v4', LS_VERS = 'schedchk.versions.v4';
   const OLD_VERS = ['schedchk.versions.v3', 'schedchk.versions.v2'];
   const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
   const DOWL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const TYPES = { manager: 'Manager', full: 'Full time', part: 'Part time' };
-
-  // ---------- starting data: the September 23–29 schedule ----------
-  function defaultRules() { return { openEnd: '14:00', openMin: 2, closeStart: '18:00', closeMin: 3, midMin: 0, maxDay: 8, maxWeek: 40, ptMaxDay: 5, lunch: 60 }; }
-  function defaultHours() { const h = {}; for (let d = 0; d < 7; d++) h[d] = { open: '09:00', close: d === 0 ? '18:00' : '20:10' }; return h; }
-  function defaultPresets() { return [{ key: 'O', label: 'Open', shift: '9-6PM' }, { key: 'M', label: 'Middle', shift: '10-7PM' }, { key: 'C', label: 'Close', shift: '11:10-8:10PM' }, { key: 'A', label: 'Short open', shift: '9-2PM' }, { key: 'P', label: 'Short close', shift: '3:10PM-8:10PM' }]; }
-  function seed() {
-    const names = ['Drea', 'Jenny', 'Wendy', 'Kali', 'Dani', 'Kari', 'Joanna', 'Brittni', 'Ivan', 'Omar'];
-    const PART = ['Kari', 'Joanna'];
-    const employees = names.map((n, i) => ({ id: 'e' + (i + 1), name: n, type: i < 2 ? 'manager' : PART.includes(n) ? 'part' : 'full' }));
-    const O = '9-6PM', C = '11:10-8:10PM', D = '8:30-8:10PM', P = '3:10PM-8:10PM', A = '9-2PM';
-    const rows = [
-      /* We 9/23 */ [D, O, O, O, '', '', P, C, C, ''],
-      /* Th 9/24 */ [D, O, O, O, C, '', P, '', C, ''],
-      /* Fr 9/25 */ [D, O, O, '', O, P, A, C, C, C],
-      /* Sa 9/26 */ ['', '', O, '', O, A, '', C, C, C],
-      /* Su 9/27 */ ['', '', '', O, O, '', '', '12PM-5PM', '', O],
-      /* Mo 9/28 */ [D, O, '', O, O, P, P, '', '', C],
-      /* Tu 9/29 */ [D, O, O, O, '', P, P, C, C, ''],
-    ];
-    const week = { start: '2026-09-23', days: rows.map((r) => { const c = {}; r.forEach((v, i) => { if (v) c[employees[i].id] = v; }); return c; }) };
-    const usual = {}; week.days.forEach((cells, i) => { usual[dow(addDays(week.start, i))] = Object.assign({}, cells); });
-    return { v: 6, slot: 10, rules: defaultRules(), hours: defaultHours(), presets: defaultPresets(), employees, weeks: [week], usual, cur: 0 };
-  }
+  const MONL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const TYPES = { owner: 'Owner', manager: 'Manager', full: 'Full time', part: 'Part time' };
+  const VIEW_LEN = 14, YEAR_LEN = 365, STATE_V = 9;
 
   // ---------- date helpers ----------
   function parseDate(s) { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); }
@@ -338,54 +479,46 @@
   function addDays(s, n) { const d = parseDate(s); d.setDate(d.getDate() + n); return iso(d); }
   function dow(s) { return parseDate(s).getDay(); }
   function md(s) { const d = parseDate(s); return (d.getMonth() + 1) + '/' + d.getDate(); }
-  function weekLabel(w) { const a = parseDate(w.start), b = parseDate(addDays(w.start, 6)); return MON[a.getMonth()] + ' ' + a.getDate() + '–' + (a.getMonth() === b.getMonth() ? '' : MON[b.getMonth()] + ' ') + b.getDate(); }
+  function longDate(s) { const d = parseDate(s); return DOWL[d.getDay()] + ' ' + MON[d.getMonth()] + ' ' + d.getDate(); }
+  function spanLabel(a, b) { const x = parseDate(a), y = parseDate(b); return MON[x.getMonth()] + ' ' + x.getDate() + ' – ' + (x.getMonth() === y.getMonth() ? '' : MON[y.getMonth()] + ' ') + y.getDate(); }
+  function startOfWeek(s, ws) { let d = s; while (dow(d) !== ws) d = addDays(d, -1); return d; }
   const TODAY = iso(new Date());
+
+  // ---------- starting data for a brand-new computer only; the user's own usual week replaces it as soon as they set one ----------
+  function defaultRules() { return { openEnd: '14:00', openMin: 2, closeStart: '18:00', closeMin: 3, midMin: 0, maxDay: 8, maxWeek: 40, ptMaxDay: 5, lunch: 60 }; }
+  function defaultHours() { const h = {}; for (let d = 0; d < 7; d++) h[d] = { open: '09:00', close: d === 0 ? '18:00' : '20:10' }; return h; }
+  function defaultPresets() { return [{ key: 'O', label: 'Open', shift: '9-6PM' }, { key: 'M', label: 'Middle', shift: '10-7PM' }, { key: 'C', label: 'Close', shift: '11:10-8:10PM' }, { key: 'A', label: 'Short open', shift: '9-2PM' }, { key: 'P', label: 'Short close', shift: '3:10PM-8:10PM' }]; }
+  function seed() {
+    const names = ['Drea', 'Jenny', 'Wendy', 'Kali', 'Dani', 'Brittni', 'Ivan', 'Omar'];
+    const typeOf = (n) => n === 'Drea' ? 'owner' : n === 'Jenny' ? 'manager' : 'full';
+    const employees = names.map((n, i) => ({ id: 'e' + (i + 1), name: n, type: typeOf(n) }));
+    const O = '9-6PM', C = '11:10-8:10PM', D = '8:30-8:10PM';
+    const rows = { 3: [D, O, O, O, '', C, C, ''], 4: [D, O, O, O, C, '', C, ''], 5: [D, O, O, '', O, C, C, C], 6: ['', '', O, '', O, C, C, C], 0: ['', '', '', O, O, '12PM-5PM', '', O], 1: [D, O, '', O, O, '', '', C], 2: [D, O, O, O, '', C, C, ''] };
+    const usual = {}; Object.keys(rows).forEach((d) => { const c = {}; rows[d].forEach((v, i) => { if (v) c[employees[i].id] = v; }); usual[d] = c; });
+    return { v: STATE_V, slot: 10, rules: defaultRules(), hours: defaultHours(), presets: defaultPresets(), employees, usual, templates: [{ id: 't1', name: 'Usual week', cells: JSON.parse(JSON.stringify(usual)) }], days: {}, weekStart: 3, view: { start: startOfWeek(TODAY, 3) } };
+  }
 
   // ---------- state ----------
   function load(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
-  function migrate(st) {
-    if (!st || !st.weeks || !st.weeks.length) return seed();
-    st.rules = Object.assign(defaultRules(), st.rules || {});
-    if (!st.hours) st.hours = defaultHours();
-    if (!st.presets || !st.presets.length) st.presets = defaultPresets();
-    st.employees.forEach((e) => { if (!e.type) e.type = e.counts === false ? 'manager' : 'full'; delete e.counts; });
-    if (!st.slot) st.slot = 10;
-    if (st.cur == null || st.cur >= st.weeks.length) st.cur = 0;
-    if (!st.usual) st.usual = {};
-    if (!st.v || st.v < 5) { st.employees.forEach((e) => { if (['kari', 'joanna'].includes(String(e.name).trim().toLowerCase()) && e.type === 'full') e.type = 'part'; }); st.v = 5; }
-    if (st.v < 6) {
-      // no-lunch shifts must be 5 hours or less: short close starts 3:10PM, and part-timers' long shifts become 5-hour ones
-      st.presets.forEach((p) => { if (String(p.shift).replace(/\s/g, '').toUpperCase() === '3PM-8:10PM') p.shift = '3:10PM-8:10PM'; });
-      const limit = (st.rules.ptMaxDay || 5) * 60, parts = new Set(st.employees.filter((e) => e.type === 'part').map((e) => e.id));
-      const fix = (cells) => Object.keys(cells).forEach((id) => { const p = parseShiftWith(cells[id], st.presets); if (!p || p.error) return; if (p.start === 15 * 60 && p.end === 20 * 60 + 10) cells[id] = '3:10PM-8:10PM'; else if (parts.has(id) && p.end - p.start > limit) cells[id] = p.end >= 20 * 60 ? '3:10PM-8:10PM' : '9-2PM'; });
-      st.weeks.forEach((w) => w.days.forEach(fix)); Object.keys(st.usual).forEach((d) => fix(st.usual[d]));
-      st.v = 6;
-    }
-    // tidy every shift into the house style (AM blank, PM marked)
-    const tidy = (cells) => Object.keys(cells).forEach((id) => { const p = parseShiftWith(cells[id], st.presets); if (p && !p.error) cells[id] = canon(p); });
-    st.weeks.forEach((w) => w.days.forEach(tidy)); Object.keys(st.usual).forEach((d) => tidy(st.usual[d]));
-    st.presets.forEach((p) => { const q = parseShiftWith(p.shift, [], 1); if (q && !q.error) p.shift = canon(q); });
-    return st;
-  }
   let S;
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 2400); }
+  function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 2600); }
   const toMin = (t) => { if (!t) return null; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
   const fmt = (min) => { const h = Math.floor(min / 60) % 24, m = min % 60; const ap = h >= 12 ? 'pm' : 'am'; const hh = ((h + 11) % 12) + 1; return hh + (m ? ':' + String(m).padStart(2, '0') : '') + ap; };
-  // house style: "9-6PM", "11:10-8:10PM", "3PM-8:10PM", "12PM-5PM"
   const fmtC = (min) => { const h = Math.floor(min / 60) % 24, m = min % 60; const hh = ((h + 11) % 12) + 1; return hh + (m ? ':' + String(m).padStart(2, '0') : '') + (h >= 12 ? 'PM' : ''); };
   const canon = (p) => fmtC(p.start) + '-' + fmtC(p.end);
   const hrs = (m) => { m = Math.round(m); const h = Math.floor(m / 60), r = m % 60; return h + (r ? 'h ' + String(r).padStart(2, '0') + 'm' : 'h'); };
-  const cw = () => S.weeks[S.cur];
   const R = () => S.rules;
   const hoursOf = (d) => S.hours[d] || { open: '09:00', close: '20:10' };
-  const counted = (e) => e.type !== 'manager';
+  const counted = (e) => e.type !== 'manager';           // on the floor for staffing
+  const limited = (e) => e.type === 'full' || e.type === 'part';  // hour rules apply
+  const wkStart = (s) => startOfWeek(s, S.weekStart);
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
-  // file state
-  let fileHandle = null, fileName = '', dirty = false;
-  function renderFileLine() { $('#fileLine').innerHTML = fileName ? `Editing <b>${esc(fileName)}</b>${dirty ? ' · unsaved changes' : ' · saved'}` : `Not saved to a file yet — use <b>Save</b> in the Schedules box to keep this on your PC.`; }
+  let fileHandle = null, fileName = '', dirty = false, mode = 'start', selDay = null;
+  function renderFileLine() { $('#fileLine').innerHTML = (fileName ? `Editing <b>${esc(fileName)}</b>${dirty ? ' · unsaved changes' : ' · saved'}` : `Saved on this computer automatically. Use <b>Save</b> in the Schedules box to also keep a file.`); }
   function saveState() { store(LS_STATE, S); if (!dirty) { dirty = true; renderFileLine(); } }
 
   // ---------- shift parsing ----------
@@ -409,9 +542,69 @@
   const shiftText = (p) => p ? fmt(p.start) + '–' + fmt(p.end) : 'off';
   function worked(p, emp) { if (!p || p.error) return 0; const len = p.end - p.start; return len > 300 && emp.type !== 'part' ? Math.max(0, len - R().lunch) : len; }
 
-  // load saved work (after the parser exists, since tidying uses it)
-  S = migrate(load(LS_STATE));
+  // ---------- migration ----------
+  function migrate(st) {
+    if (!st) return seed();
+    if (!st.days && !(st.weeks && st.weeks.length)) return seed();
+    st.rules = Object.assign(defaultRules(), st.rules || {});
+    if (!st.hours) st.hours = defaultHours();
+    if (!st.presets || !st.presets.length) st.presets = defaultPresets();
+    st.employees.forEach((e) => { if (!e.type) e.type = e.counts === false ? 'manager' : 'full'; delete e.counts; });
+    if (!st.slot) st.slot = 10;
+    if (!st.usual) st.usual = {};
+    if (!st.weekStart && st.weekStart !== 0) st.weekStart = 3;
+    if (!st.v || st.v < 5) { st.employees.forEach((e) => { if (['kari', 'joanna'].includes(String(e.name).trim().toLowerCase()) && e.type === 'full') e.type = 'part'; }); st.v = 5; }
+    if (st.v < 6) {
+      st.presets.forEach((p) => { if (String(p.shift).replace(/\s/g, '').toUpperCase() === '3PM-8:10PM') p.shift = '3:10PM-8:10PM'; });
+      const limit = (st.rules.ptMaxDay || 5) * 60, parts = new Set(st.employees.filter((e) => e.type === 'part').map((e) => e.id));
+      const fix = (cells) => Object.keys(cells).forEach((id) => { const p = parseShiftWith(cells[id], st.presets); if (!p || p.error) return; if (p.start === 15 * 60 && p.end === 20 * 60 + 10) cells[id] = '3:10PM-8:10PM'; else if (parts.has(id) && p.end - p.start > limit) cells[id] = p.end >= 20 * 60 ? '3:10PM-8:10PM' : '9-2PM'; });
+      (st.weeks || []).forEach((w) => w.days.forEach(fix)); Object.keys(st.usual).forEach((d) => fix(st.usual[d]));
+      st.v = 6;
+    }
+    // v7: one continuous calendar instead of week tabs; Drea counts on the floor again
+    if (!st.days) st.days = {};
+    if (st.weeks) {
+      st.weeks.forEach((w) => w.days.forEach((cells, i) => { const day = addDays(w.start, i); const d = st.days[day] = st.days[day] || { s: {}, ot: {}, off: {} }; st.employees.forEach((e) => { d.s[e.id] = cells[e.id] || ''; }); }));
+      delete st.weeks; delete st.cur;
+    }
+    if (st.v < 7) { st.employees.forEach((e) => { if (String(e.name).trim().toLowerCase() === 'drea' && e.type === 'manager') e.type = 'owner'; }); st.v = 7; }
+    if (st.v < 8) {
+      const gone = new Set(st.employees.filter((e) => ['kari', 'joanna'].includes(String(e.name).trim().toLowerCase())).map((e) => e.id));
+      st.employees = st.employees.filter((e) => !gone.has(e.id));
+      const scrub = (o) => { if (o) gone.forEach((id) => { delete o[id]; }); };
+      Object.keys(st.usual).forEach((d) => scrub(st.usual[d]));
+      Object.keys(st.days).forEach((k) => { const d = st.days[k]; scrub(d.s); scrub(d.ot); scrub(d.off); scrub(d.so); });
+      st.v = 8;
+    }
+    Object.keys(st.days).forEach((k) => { const d = st.days[k]; d.s = d.s || {}; d.ot = d.ot || {}; d.off = d.off || {}; d.so = d.so || {}; });
+    if (!st.templates) st.templates = [{ id: 't1', name: 'Usual week', cells: JSON.parse(JSON.stringify(st.usual)) }];
+    if (st.v < 9) st.v = 9;
+    if (!st.view || !st.view.start) st.view = { start: startOfWeek(TODAY, st.weekStart) };
+    // tidy every shift into the house style (AM blank, PM marked)
+    const tidy = (cells) => Object.keys(cells).forEach((id) => { const p = parseShiftWith(cells[id], st.presets); if (p && !p.error) cells[id] = canon(p); });
+    Object.keys(st.days).forEach((k) => tidy(st.days[k].s)); Object.keys(st.usual).forEach((d) => tidy(st.usual[d]));
+    st.templates.forEach((t) => Object.keys(t.cells || {}).forEach((d) => tidy(t.cells[d])));
+    st.presets.forEach((p) => { const q = parseShiftWith(p.shift, [], 1); if (q && !q.error) p.shift = canon(q); });
+    return st;
+  }
+  const LS_BAK = 'schedchk.backups';
+  function keepBackup(raw, why) { try { const list = load(LS_BAK) || []; list.push({ at: Date.now(), fromV: raw.v || 0, toV: STATE_V, app: APP_VERSION, why: why || 'update', state: raw }); while (list.length > 3) list.shift(); store(LS_BAK, list); } catch (e) { /* storage full: carry on */ } }
+  (function boot() { const raw = load(LS_STATE); const upgrading = raw && (raw.v || 0) < STATE_V; if (upgrading) keepBackup(raw); S = migrate(raw); if (upgrading) store(LS_STATE, S); })();
   if (!load(LS_VERS)) { for (const k of OLD_VERS) { const v = load(k); if (v && v.length) { store(LS_VERS, v.map((x) => ({ ...x, state: migrate(x.state) }))); break; } } }
+
+  // ---------- the calendar: a day's cell = your edit if you made one, else the usual shift ----------
+  function dayRec(day, create) { let d = S.days[day]; if (!d && create) d = S.days[day] = { s: {}, ot: {}, off: {}, so: {} }; return d; }
+  function cellText(day, id) { const d = S.days[day]; if (d && has(d.s, id)) return d.s[id] || ''; const u = S.usual[dow(day)] || {}; return u[id] || ''; }
+  function cellsOf(day) { const c = {}; S.employees.forEach((e) => { const t = cellText(day, e.id); if (t) c[e.id] = t; }); return c; }
+  const isOT = (day, id) => { const d = S.days[day]; return !!(d && d.ot[id]); };
+  const isOff = (day, id) => { const d = S.days[day]; return !!(d && d.off[id]); };
+  const isSO = (day, id) => { const d = S.days[day]; return !!(d && d.so[id]); };
+  function setSO(day, id, on) { const d = dayRec(day, true); if (on) { d.so[id] = 1; d.s[id] = ''; delete d.ot[id]; } else { delete d.so[id]; if (d.s[id] === '') delete d.s[id]; } }
+  function setCell(day, id, value) { const d = dayRec(day, true), v = (value || '').trim(); if (!v || /^[–—-]+$/.test(v) || /^off$/i.test(v)) { d.s[id] = ''; if (/^off$/i.test(v)) d.so[id] = 1; } else { const p = parseShift(v); d.s[id] = p && !p.error ? canon(p) : v; delete d.so[id]; } }
+  function setOT(day, id, on) { const d = dayRec(day, true); if (on) d.ot[id] = 1; else delete d.ot[id]; }
+  function setOff(day, id, on) { const d = dayRec(day, true); if (on) { d.off[id] = 1; d.s[id] = ''; } else { delete d.off[id]; if (d.s[id] === '') delete d.s[id]; } }
+  function viewDates() { const out = []; for (let i = 0; i < VIEW_LEN; i++) out.push(addDays(S.view.start, i)); return out; }
+  const viewEnd = () => addDays(S.view.start, VIEW_LEN - 1);
 
   // ---------- checking ----------
   function windowsFor(d) {
@@ -426,9 +619,9 @@
     const count = (t) => S.employees.reduce((n, e) => { const p = shifts[e.id]; return n + (counted(e) && p && !p.error && t >= p.start && t < p.end ? 1 : 0); }, 0);
     return { shifts, unknown, count };
   }
-  function dayProblems(cells, date) {
-    const info = dayInfo(cells), probs = [], d = dow(date), wins = windowsFor(d), r = R();
-    if (!wins) { probs.push({ type: 'warn', text: 'Store hours for ' + DOWL[d] + ' are not set properly' }); return { info, probs }; }
+  function dayProblems(day) {
+    const cells = cellsOf(day), info = dayInfo(cells), probs = [], d = dow(day), wins = windowsFor(d), r = R();
+    if (!wins) { probs.push({ type: 'warn', text: 'Store hours for ' + DOWL[d] + ' are not set properly' }); return { info, probs, cells }; }
     wins.forEach((w) => {
       if (!w.min) return; let cur = null;
       for (let t = w.start; t < w.end; t += S.slot) {
@@ -439,56 +632,67 @@
       if (cur) probs.push(cur);
     });
     S.employees.forEach((e) => {
-      const p = info.shifts[e.id]; if (!p || p.error || !counted(e)) return;
+      const p = info.shifts[e.id]; if (!p || p.error) return;
+      if (isOff(day, e.id)) probs.push({ type: 'low', id: e.id, text: `${e.name} asked for this day off but is scheduled ${canon(p)}` });
+      if (!limited(e)) return;
       const len = p.end - p.start, wk = worked(p, e);
-      if (e.type === 'part' && len > r.ptMaxDay * 60) probs.push({ type: 'hours', who: e.name, id: e.id, text: `${e.name} is part time but is on for ${hrs(len)} (keep it to ${r.ptMaxDay} so no lunch is needed)` });
-      else if (wk > r.maxDay * 60) probs.push({ type: 'hours', who: e.name, id: e.id, text: `${e.name} works ${hrs(wk)} after lunch (max ${r.maxDay})` });
+      if (e.type === 'part' && len > r.ptMaxDay * 60) probs.push({ type: 'hours', id: e.id, text: `${e.name} is part time but is on for ${hrs(len)} (keep it to ${r.ptMaxDay} so no lunch is needed)` });
+      else if (wk > r.maxDay * 60 && !isOT(day, e.id)) probs.push({ type: 'hours', id: e.id, text: `${e.name} works ${hrs(wk)} after lunch (max ${r.maxDay}) — click OT on the cell to approve overtime` });
     });
-    info.unknown.forEach((nm) => probs.push({ type: 'warn', who: nm, text: `Can't read ${nm}'s shift (fix the text or leave it blank)` }));
-    return { info, probs };
+    info.unknown.forEach((nm) => probs.push({ type: 'warn', text: `Can't read ${nm}'s shift (fix the text or leave it blank)` }));
+    return { info, probs, cells };
   }
-  function weekHours(w) { const tot = {}; S.employees.forEach((e) => { tot[e.id] = 0; }); w.days.forEach((cells) => S.employees.forEach((e) => { tot[e.id] += worked(parseShift(cells[e.id]), e); })); return tot; }
-  function weekProblems(w) {
-    const byDay = w.days.map((cells, i) => dayProblems(cells, addDays(w.start, i)));
-    const tot = weekHours(w), wk = [];
-    S.employees.forEach((e) => { if (counted(e) && tot[e.id] > R().maxWeek * 60) wk.push({ type: 'hours', who: e.name, id: e.id, text: `${e.name} is at ${hrs(tot[e.id])} this week (max ${R().maxWeek})` }); });
-    return { byDay, week: wk, total: byDay.reduce((n, d) => n + d.probs.length, 0) + wk.length };
+  // paid hours for one person on one day, and the part that counts toward the 40-hour week (OT-approved days cap at the daily max)
+  function dayHours(day, e) { const p = parseShift(cellText(day, e.id)), wk = worked(p, e); return { wk, cap: isOT(day, e.id) ? Math.min(wk, R().maxDay * 60) : wk }; }
+  function weekHours(start) { const tot = {}, cap = {}; S.employees.forEach((e) => { tot[e.id] = 0; cap[e.id] = 0; }); for (let i = 0; i < 7; i++) { const day = addDays(start, i); S.employees.forEach((e) => { const h = dayHours(day, e); tot[e.id] += h.wk; cap[e.id] += h.cap; }); } return { tot, cap }; }
+  function weeksIn(dates) { const out = []; dates.forEach((d) => { const w = wkStart(d); if (!out.includes(w)) out.push(w); }); return out; }
+  function rangeProblems(dates) {
+    const byDay = {}; dates.forEach((d) => { byDay[d] = dayProblems(d); });
+    const week = [];
+    weeksIn(dates).forEach((ws) => { const { cap } = weekHours(ws); S.employees.forEach((e) => { if (limited(e) && cap[e.id] > R().maxWeek * 60) week.push({ type: 'hours', id: e.id, ws, text: `Week of ${md(ws)}: ${e.name} is at ${hrs(cap[e.id])} (max ${R().maxWeek})` }); }); });
+    return { byDay, week, total: dates.reduce((n, d) => n + byDay[d].probs.length, 0) + week.length };
   }
   function probText(p) {
-    if (p.type === 'low') return `${p.win === 'opening' ? 'OPENING' : p.win === 'closing' ? 'CLOSING' : 'MIDDAY'} ${fmt(p.start)}–${fmt(p.end)}: only ${p.n} ${p.n === 1 ? 'person' : 'people'} (need ${p.need})`;
+    if (p.type === 'low' && p.win) return `${p.win === 'opening' ? 'OPENING' : p.win === 'closing' ? 'CLOSING' : 'MIDDAY'} ${fmt(p.start)}–${fmt(p.end)}: only ${p.n} ${p.n === 1 ? 'person' : 'people'} (need ${p.need})`;
     return p.text;
   }
 
-  // ---------- auto-complete (hill-climb over the whole week) ----------
-  function optimize(w) {
-    const r = R(), slot = S.slot, days = 7;
-    const emps = S.employees.filter((e) => counted(e));
-    const dates = w.days.map((_, i) => addDays(w.start, i));
+  // ---------- auto-complete (hill-climb over the two weeks) ----------
+  function optimize(dates) {
+    const r = R(), slot = S.slot, n = dates.length;
+    const emps = S.employees.filter(limited);          // only full- and part-timers get moved; owners and managers stay as typed
+    const fixedCount = dates.map((day) => { const cells = cellsOf(day), sh = {}; S.employees.forEach((e) => { if (!limited(e) && counted(e)) sh[e.id] = parseShift(cells[e.id]); }); return (t) => Object.keys(sh).reduce((k, id) => { const p = sh[id]; return k + (p && !p.error && t >= p.start && t < p.end ? 1 : 0); }, 0); });
     const wins = dates.map((dt) => windowsFor(dow(dt)) || []);
     const cands = [];
     const addC = (txt) => { const p = parseShift(txt, 1); if (p && !p.error && !cands.some((c) => sameShift(c.p, p))) cands.push({ txt: canon(p), p }); };
     S.presets.forEach((p) => addC(p.shift));
-    w.days.forEach((cells) => emps.forEach((e) => { if (cells[e.id]) addC(cells[e.id]); }));
+    dates.forEach((day) => emps.forEach((e) => { const t = cellText(day, e.id); if (t) addC(t); }));
     const okFor = (e, c) => { const len = c.p.end - c.p.start; return e.type === 'part' ? len <= r.ptMaxDay * 60 : worked(c.p, e) <= r.maxDay * 60; };
-    const orig = w.days.map((cells) => { const o = {}; emps.forEach((e) => { const p = parseShift(cells[e.id]); o[e.id] = p && !p.error ? cands.findIndex((c) => sameShift(c.p, p)) : -1; if (p && p.error) o[e.id] = -2; }); return o; });
+    const orig = dates.map((day) => { const o = {}; emps.forEach((e) => { const p = parseShift(cellText(day, e.id)); o[e.id] = p && !p.error ? cands.findIndex((c) => sameShift(c.p, p)) : -1; if (p && p.error) o[e.id] = -2; }); return o; });
+    const offReq = dates.map((day) => { const o = {}; emps.forEach((e) => { o[e.id] = isOff(day, e.id); }); return o; });
+    const otDay = dates.map((day) => { const o = {}; emps.forEach((e) => { o[e.id] = isOT(day, e.id); }); return o; });
+    // hours already fixed in each pay week from days outside the view
+    const weekOf = dates.map((d) => wkStart(d)), weekIds = [...new Set(weekOf)];
+    const outside = {}; weekIds.forEach((ws) => { outside[ws] = {}; emps.forEach((e) => { let h = 0; for (let i = 0; i < 7; i++) { const day = addDays(ws, i); if (!dates.includes(day)) h += dayHours(day, e).cap; } outside[ws][e.id] = h; }); });
     let cur = orig.map((o) => Object.assign({}, o));
     const shiftOf = (d, id) => { const i = cur[d][id]; return i >= 0 ? cands[i].p : null; };
+    const capOf = (d, e) => { const p = shiftOf(d, e.id); if (!p) return 0; const wk = worked(p, e); return otDay[d][e.id] ? Math.min(wk, r.maxDay * 60) : wk; };
     const dayPen = (d) => {
       let pen = 0;
-      wins[d].forEach((wn) => { if (!wn.min) return; for (let t = wn.start; t < wn.end; t += slot) { let n = 0; for (const e of emps) { const p = shiftOf(d, e.id); if (p && t >= p.start && t < p.end) n++; } if (n < wn.min) pen += (wn.min - n) * slot; } });
-      emps.forEach((e) => { const p = shiftOf(d, e.id); if (!p) return; const len = p.end - p.start, wk = worked(p, e); if (e.type === 'part' && len > r.ptMaxDay * 60) pen += 100 + (len - r.ptMaxDay * 60); else if (wk > r.maxDay * 60) pen += 100 + (wk - r.maxDay * 60); });
+      wins[d].forEach((wn) => { if (!wn.min) return; for (let t = wn.start; t < wn.end; t += slot) { let k = fixedCount[d](t); for (const e of emps) { const p = shiftOf(d, e.id); if (p && t >= p.start && t < p.end) k++; } if (k < wn.min) pen += (wn.min - k) * slot; } });
+      emps.forEach((e) => { const p = shiftOf(d, e.id); if (!p) return; if (offReq[d][e.id]) pen += 150; const len = p.end - p.start, wk = worked(p, e); if (e.type === 'part' && len > r.ptMaxDay * 60) pen += 100 + (len - r.ptMaxDay * 60); else if (wk > r.maxDay * 60 && !otDay[d][e.id]) pen += 100 + (wk - r.maxDay * 60); });
       emps.forEach((e) => { const a = orig[d][e.id], b = cur[d][e.id]; if (a === b) return; if (a === -2) pen += 2; else if (a < 0) pen += 20; else if (b < 0) pen += 10; else pen += 6; });
       return pen;
     };
-    const weekPen = () => { let pen = 0; emps.forEach((e) => { let tot = 0; for (let d = 0; d < days; d++) tot += worked(shiftOf(d, e.id), e); if (tot > r.maxWeek * 60) pen += 100 + (tot - r.maxWeek * 60) * 2; }); return pen; };
-    const pens = []; for (let d = 0; d < days; d++) pens.push(dayPen(d));
+    const weekPen = () => { let pen = 0; weekIds.forEach((ws) => emps.forEach((e) => { let tot = outside[ws][e.id]; for (let d = 0; d < n; d++) if (weekOf[d] === ws) tot += capOf(d, e); if (tot > r.maxWeek * 60) pen += 100 + (tot - r.maxWeek * 60) * 2; })); return pen; };
+    const pens = []; for (let d = 0; d < n; d++) pens.push(dayPen(d));
     let wpen = weekPen(), total = pens.reduce((a, b) => a + b, 0) + wpen;
     const moves = [];
-    for (let d = 0; d < days; d++) emps.forEach((e) => { moves.push({ d, id: e.id, to: -1 }); cands.forEach((c, i) => { if (okFor(e, c)) moves.push({ d, id: e.id, to: i }); }); });
+    for (let d = 0; d < n; d++) emps.forEach((e) => { moves.push({ d, id: e.id, to: -1 }); if (!offReq[d][e.id]) cands.forEach((c, i) => { if (okFor(e, c)) moves.push({ d, id: e.id, to: i }); }); });
     let best = { total, cur: cur.map((o) => Object.assign({}, o)) };
     for (let restart = 0; restart < 4; restart++) {
-      cur = orig.map((o) => Object.assign({}, o)); for (let d = 0; d < days; d++) pens[d] = dayPen(d); wpen = weekPen(); total = pens.reduce((a, b) => a + b, 0) + wpen;
-      for (let iter = 0; iter < 400; iter++) {
+      cur = orig.map((o) => Object.assign({}, o)); for (let d = 0; d < n; d++) pens[d] = dayPen(d); wpen = weekPen(); total = pens.reduce((a, b) => a + b, 0) + wpen;
+      for (let iter = 0; iter < 600; iter++) {
         let bestMove = null, bestDelta = -1e-9, bestNew = null;
         const order = moves.slice(); if (restart) for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
         for (const m of order) {
@@ -502,8 +706,8 @@
       if (total < best.total) best = { total, cur: cur.map((o) => Object.assign({}, o)) };
     }
     const changes = [];
-    best.cur.forEach((o, d) => emps.forEach((e) => { const a = orig[d][e.id], b = o[e.id]; if (a === b) return; changes.push({ d, date: dates[d], id: e.id, name: e.name, from: a === -2 ? (w.days[d][e.id] || '?') : a < 0 ? '' : cands[a].txt, to: b < 0 ? '' : cands[b].txt }); }));
-    return { changes, cur: best.cur, cands };
+    best.cur.forEach((o, d) => emps.forEach((e) => { const a = orig[d][e.id], b = o[e.id]; if (a === b) return; changes.push({ day: dates[d], id: e.id, name: e.name, from: a === -2 ? (cellText(dates[d], e.id) || '?') : a < 0 ? '' : cands[a].txt, to: b < 0 ? '' : cands[b].txt }); }));
+    return { changes };
   }
 
   // ---------- modal ----------
@@ -515,14 +719,14 @@
     host.querySelectorAll('button[data-b]').forEach((btn) => btn.addEventListener('click', () => { const b = buttons[+btn.dataset.b]; close(); if (b.onClick) b.onClick(); }));
     return close;
   }
-  function probsHtml(w, wp) {
+  function probsHtml(dates, rp) {
     let h = '';
-    wp.byDay.forEach(({ probs }, di) => { if (!probs.length) return; const date = addDays(w.start, di); h += probs.map((p) => `<li class="${p.type}" data-view="${di}"><b>${DOW[dow(date)]} ${md(date)}</b><span>${esc(probText(p))}</span></li>`).join(''); });
-    wp.week.forEach((p) => { h += `<li class="${p.type}"><b>Week</b><span>${esc(p.text)}</span></li>`; });
+    dates.forEach((day) => { const { probs } = rp.byDay[day]; if (!probs.length) return; h += probs.map((p) => `<li class="${p.type}" data-view="${day}"><b>${DOW[dow(day)]} ${md(day)}</b><span>${esc(probText(p))}</span></li>`).join(''); });
+    rp.week.forEach((p) => { h += `<li class="${p.type}" data-view="${p.ws}"><b>Week</b><span>${esc(p.text)}</span></li>`; });
     return h ? `<ul class="probs">${h}</ul>` : '';
   }
 
-  // ---------- render ----------
+  // ---------- render: settings ----------
   function renderRules() {
     const r = R();
     $('#rules').innerHTML = `
@@ -531,9 +735,10 @@
       <div class="rule">In between needs at least <input type="number" min="0" data-r="midMin" value="${r.midMin}"> people</div>
       <div class="rule">Max <input type="number" min="0" data-r="maxDay" value="${r.maxDay}"> hrs a day and <input type="number" min="0" data-r="maxWeek" value="${r.maxWeek}"> hrs a week, after an unpaid lunch of <input type="number" min="0" step="5" data-r="lunch" value="${r.lunch}"> min on shifts over 5 hrs</div>
       <div class="rule">Part time: at most <input type="number" min="0" step="0.5" data-r="ptMaxDay" value="${r.ptMaxDay}"> hrs on the clock in a day (no lunch needed)</div>
+      <div class="rule">Pay week starts on <select id="weekStartSel">${DOWL.map((n, i) => `<option value="${i}">${n}</option>`).join('')}</select></div>
       <div class="rule">Check every <select data-r="slot"><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="30">30</option></select> minutes</div>
-      <p class="hint">Managers are never counted toward staffing and the hour limits don't apply to them.</p>`;
-    $('#rules select[data-r=slot]').value = S.slot;
+      <p class="hint"><b>Owner</b> counts on the floor with no hour limits. <b>Manager</b> is shown but never counted. <b>Full time</b> and <b>Part time</b> get the hour rules. An OT check on a cell approves overtime for that person that day: no daily limit, and the hours over ${r.maxDay} that day don't count toward the week.</p>`;
+    $('#rules select[data-r=slot]').value = S.slot; $('#weekStartSel').value = S.weekStart;
   }
   function renderHours() {
     $('#hours').innerHTML = '<span></span><b style="font-size:12px;color:var(--muted)">Open</b><b style="font-size:12px;color:var(--muted)">Close</b>' + [1, 2, 3, 4, 5, 6, 0].map((d) => `<b>${DOWL[d].slice(0, 3)}</b><input type="time" data-h="${d}" data-f="open" value="${hoursOf(d).open}"><input type="time" data-h="${d}" data-f="close" value="${hoursOf(d).close}">`).join('');
@@ -542,52 +747,156 @@
   function renderLegend() {
     $('#legend').innerHTML = S.presets.map((p, i) => `<div class="p"><input class="k" data-p="${i}" data-f="key" value="${esc(p.key)}" maxlength="3" title="Letter to type" style="background:var(--${PCOL[i % 5]})"><input class="l" data-p="${i}" data-f="label" value="${esc(p.label)}" title="Name"><input class="s" data-p="${i}" data-f="shift" value="${esc(p.shift)}" title="Times"><button class="x" data-delp="${i}" title="Remove">×</button></div>`).join('') + '<div><button class="small ghost" id="addPreset">+ shortcut</button></div>';
   }
-  function renderTabs() {
-    $('#tabs').innerHTML = S.weeks.map((w, i) => `<button data-w="${i}" class="${i === S.cur ? 'active' : ''}">${weekLabel(w)}${weekProblems(w).total ? '<span class="dot"></span>' : ''}</button>`).join('') + '<button data-w="new" class="ghost" title="Add the next week">+ Week</button>';
+  function tplWeekStart(which) { return addDays(wkStart(S.view.start), which ? 7 : 0); }
+  function curTpl() { return S.templates.find((t) => t.id === $('#tplSel').value) || S.templates[0]; }
+  function renderTemplates() {
+    const sel = $('#tplSel'), keep = sel.value;
+    sel.innerHTML = S.templates.map((t) => `<option value="${t.id}">${esc(t.name)}</option>`).join('');
+    if (S.templates.some((t) => t.id === keep)) sel.value = keep;
+    const t = curTpl(); const pv = $('#tplPreview');
+    $('#tplCard').querySelectorAll('button').forEach((b) => { if (!b.dataset.savetpl && b.id !== 'tplNew') b.disabled = !t; });
+    if (!t) { pv.innerHTML = '<tbody><tr><td class="d" style="color:var(--muted)">No templates yet — save a week as one.</td></tr></tbody>'; return; }
+    let h = '<thead><tr><th></th>' + S.employees.map((x) => `<th>${esc(x.name)}</th>`).join('') + '</tr></thead><tbody>';
+    for (let i = 0; i < 7; i++) { const d = (S.weekStart + i) % 7, row = t.cells[d] || {}; h += `<tr><td class="d"><small>${DOW[d]}</small></td>` + S.employees.map((x) => { const txt = row[x.id] || '', p = parseShift(txt); return `<td class="${p && !p.error ? presetClass(p) : ''}">${txt ? esc(txt) : '–'}</td>`; }).join('') + '</tr>'; }
+    pv.innerHTML = h + '</tbody>';
   }
-  let selDay = null, WP = null;
+  function applyTemplate(t, ws) {
+    let skipped = 0;
+    for (let i = 0; i < 7; i++) { const day = addDays(ws, i), d = dayRec(day, true), row = t.cells[dow(day)] || {}; S.employees.forEach((e) => { if (d.off[e.id]) { if (row[e.id]) skipped++; return; } d.s[e.id] = row[e.id] || ''; delete d.so[e.id]; delete d.ot[e.id]; }); }
+    return skipped;
+  }
+  $('#tplSel').addEventListener('change', renderTemplates);
+  $('#tplCard').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'tplNew') {
+      const name = prompt('Name for the new template:', 'New week'); if (!name) return;
+      const t = { id: 't' + Date.now(), name: name.trim(), cells: {} }; S.templates.push(t); $('#tplSel').innerHTML += `<option value="${t.id}"></option>`; $('#tplSel').value = t.id; renderTemplates(); saveState();
+      toast('Blank template "' + t.name + '" — apply it to a week, fill the week in, then Update from that week');
+    } else if (b.dataset.updtpl != null) {
+      const t = curTpl(); if (!t) return; const ws = tplWeekStart(+b.dataset.updtpl);
+      if (!confirm(`Overwrite the template "${t.name}" with the week of ${md(ws)} as it is on screen?`)) return;
+      const cells = {}; for (let i = 0; i < 7; i++) { const day = addDays(ws, i); cells[dow(day)] = cellsOf(day); } t.cells = cells; renderTemplates(); saveState(); toast(`Template "${t.name}" now matches the week of ${md(ws)}`);
+    } else if (b.dataset.apply != null) {
+      const t = curTpl(); if (!t) return; const weeks = b.dataset.apply === 'both' ? [0, 1] : [+b.dataset.apply]; let skipped = 0;
+      weeks.forEach((w) => { skipped += applyTemplate(t, tplWeekStart(w)); });
+      selDay = null; renderRange();
+      toast(`Applied "${t.name}" to ${weeks.length === 2 ? 'both weeks' : 'the week of ' + md(tplWeekStart(weeks[0]))}${skipped ? ' · ' + skipped + ' left off (asked for the day off)' : ''}`);
+    } else if (b.dataset.savetpl != null) {
+      const ws = tplWeekStart(+b.dataset.savetpl); const name = prompt('Name for this template:', 'Week of ' + md(ws)); if (!name) return;
+      const cells = {}; for (let i = 0; i < 7; i++) { const day = addDays(ws, i); cells[dow(day)] = cellsOf(day); }
+      const t = { id: 't' + Date.now(), name: name.trim(), cells }; S.templates.push(t); $('#tplSel').innerHTML += `<option value="${t.id}"></option>`; $('#tplSel').value = t.id; renderTemplates(); saveState(); toast('Saved template "' + t.name + '"');
+    } else if (b.id === 'tplRename') {
+      const t = curTpl(); if (!t) return; const name = prompt('Rename template:', t.name); if (!name) return; t.name = name.trim(); renderTemplates(); saveState();
+    } else if (b.id === 'tplDelete') {
+      const t = curTpl(); if (!t || !confirm(`Delete the template "${t.name}"?`)) return; S.templates = S.templates.filter((x) => x.id !== t.id); renderTemplates(); saveState();
+    } else if (b.id === 'tplUsual') {
+      const t = curTpl(); if (!t) return; S.usual = JSON.parse(JSON.stringify(t.cells)); renderStart(); renderRange(); renderTemplates(); toast(`"${t.name}" is now the usual week for every day you haven't edited`);
+    }
+  });
+  function renderBackups() {
+    const list = load(LS_BAK) || [], ul = $('#bakList');
+    if (!list.length) { ul.innerHTML = '<li style="color:var(--muted)">None yet — nothing has needed converting on this computer.</li>'; return; }
+    ul.innerHTML = list.slice().reverse().map((b, i) => { const dt = new Date(b.at), idx = list.length - 1 - i; return `<li><div class="vname"><b>${b.why === 'reset' ? 'Before starting over' : 'Before the v' + esc(b.app) + ' update'}</b><small>${dt.toLocaleDateString()} ${dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · data format ${b.fromV} → ${b.toV}</small></div><button class="small" data-bakrestore="${idx}">Restore</button><button class="small ghost" data-bakdl="${idx}" title="Download this copy as a file">⤓</button></li>`; }).join('');
+  }
+  $('#bakList').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return; const list = load(LS_BAK) || [];
+    if (b.dataset.bakdl != null) { const bk = list[+b.dataset.bakdl]; if (bk) download('ETC schedule before v' + bk.app + ' update.json', { app: 'schedule-checker', kind: 'schedule', name: 'Before v' + bk.app + ' update', savedAt: bk.at, state: bk.state }); }
+    if (b.dataset.bakrestore != null) {
+      const bk = list[+b.dataset.bakrestore]; if (!bk) return;
+      if (!confirm(`Restore the calendar as it was ${bk.why === 'reset' ? 'before you started over' : 'before the v' + bk.app + ' update'}? What you have now is kept as a copy in the list above, so nothing is lost either way.`)) return;
+      const vers = load(LS_VERS) || []; vers.push({ id: newId(), name: 'Before restoring the pre-v' + bk.app + ' copy – ' + new Date().toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }), savedAt: Date.now(), state: snapshot() }); store(LS_VERS, vers);
+      loadState(bk.state, ''); fileHandle = null; renderFileLine(); toast('Restored the copy from before the v' + bk.app + ' update');
+    }
+  });
+  function renderVersions() {
+    const vers = load(LS_VERS) || [], ul = $('#verList');
+    if (!vers.length) { ul.innerHTML = '<li style="color:var(--muted)">No copies kept here yet.</li>'; return; }
+    ul.innerHTML = vers.slice().reverse().map((v) => { const dt = new Date(v.savedAt); return `<li><div class="vname"><b title="${esc(v.name)}">${esc(v.name)}</b><small>${dt.toLocaleDateString()} ${dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</small></div><button class="small" data-load="${v.id}">Open</button><button class="x" data-delver="${v.id}" title="Delete">×</button></li>`; }).join('');
+  }
+
+  // ---------- render: modes ----------
+  function setMode(m) {
+    mode = m;
+    $('#startScreen').hidden = m !== 'start';
+    $('#mainArea').hidden = m === 'start';
+    $('#quickBar').hidden = m === 'start';
+    $('#gridCard').hidden = m !== 'two'; $('#probCard').hidden = m !== 'two'; if (m !== 'two') $('#dayPanel').hidden = true;
+    $('#yearCard').hidden = m !== 'year';
+    $('#mainArea').classList.toggle('wide', m === 'year');
+    $('#sideBar').hidden = m === 'year';
+    ['autoBtn', 'printBtn'].forEach((id) => { $('#' + id).hidden = m !== 'two'; });
+    if (m === 'two') { renderRange(); }
+    if (m === 'year') renderYear();
+    window.scrollTo(0, 0);
+  }
+  function renderStart() {
+    const inp = $('#startDate'); if (!inp.value) inp.value = wkStart(TODAY);
+    // only pay-week start days can be picked: the calendar greys out the rest
+    inp.min = startOfWeek('2025-01-07', S.weekStart); inp.step = 7;
+    const picked = inp.value || TODAY, s = wkStart(picked), e = addDays(s, VIEW_LEN - 1);
+    if (picked !== s) { inp.value = s; toast('Pay weeks start on ' + DOWL[S.weekStart] + ' — moved to ' + longDate(s)); }
+    $('#startNote').textContent = DOWL[S.weekStart] + 's only';
+    $('#startRange').innerHTML = `${longDate(s)} → ${longDate(e)}<small>Two pay weeks, each ${DOWL[S.weekStart]} to ${DOWL[(S.weekStart + 6) % 7]}</small>`;
+    // mini preview of those two weeks
+    const dates = []; for (let i = 0; i < VIEW_LEN; i++) dates.push(addDays(s, i));
+    const rp = rangeProblems(dates);
+    let h = '<thead><tr><th></th>' + S.employees.map((x) => `<th>${esc(x.name)}</th>`).join('') + '<th></th></tr></thead><tbody>';
+    dates.forEach((day, i) => {
+      const { info, probs } = rp.byDay[day];
+      h += `<tr class="${i === 7 ? 'wk2' : ''}"><td class="d"><small>${DOW[dow(day)]}</small>${md(day)}</td>`;
+      S.employees.forEach((x) => { const txt = cellText(day, x.id), p = info.shifts[x.id], off = isOff(day, x.id), so = isSO(day, x.id), bad = probs.some((q) => q.id === x.id); h += `<td class="${p && !p.error ? presetClass(p) : ''} ${off ? 'offreq' : ''} ${so ? 'so' : ''} ${bad ? 'bad' : ''}">${off ? 'asked off' : so ? 'sched. off' : (txt ? esc(txt) : '–')}</td>`; });
+      h += `<td class="chk ${probs.length ? 'bad' : 'ok'}">${probs.length ? probs.length + ' ✗' : '✓'}</td></tr>`;
+    });
+    $('#miniGrid').innerHTML = h + '</tbody>';
+    $('#miniSum').innerHTML = rp.total ? `<span style="color:var(--coral-ink)">✗ ${rp.total} problem${rp.total === 1 ? '' : 's'} in these two weeks</span>` : `<span style="color:var(--teal-ink)">✓ These two weeks check out</span>`;
+  }
+
+  let RP = null;
   function presetClass(p) { const i = S.presets.findIndex((x) => sameShift(parseShift(x.shift, 1), p)); return i >= 0 ? 'p' + (i % 5) : 'has'; }
-  function renderWeek() {
-    const w = cw(); WP = weekProblems(w);
-    const tot = weekHours(w);
-    $('#printTitle').textContent = 'Schedule — week of ' + weekLabel(w);
+  function renderRange() { renderGrid(); renderProblems(); renderDay(); saveState(); }
+  function renderGrid() {
+    const dates = viewDates(); RP = rangeProblems(dates);
+    $('#rangeLab').innerHTML = `${spanLabel(dates[0], dates[dates.length - 1])}<small>${DOWL[dow(dates[0])]} to ${DOWL[dow(dates[dates.length - 1])]}</small>`;
+    $('#printTitle').textContent = 'Schedule — ' + spanLabel(dates[0], dates[dates.length - 1]);
     let h = '<thead><tr><th></th>';
     S.employees.forEach((e, i) => {
-      h += `<th class="emp ${e.type === 'manager' ? 'mgr' : e.type === 'part' ? 'part' : ''}"><input class="nm" type="text" data-emp="${i}" value="${esc(e.name)}" title="Click to rename"><div class="sub"><select data-type="${i}" title="Employee type">${Object.keys(TYPES).map((k) => `<option value="${k}" ${e.type === k ? 'selected' : ''}>${TYPES[k]}</option>`).join('')}</select><button class="x" data-del="${i}" title="Remove ${esc(e.name)}">×</button></div></th>`;
+      h += `<th class="emp ${e.type === 'manager' ? 'mgr' : e.type === 'owner' ? 'owner' : e.type === 'part' ? 'part' : ''}"><input class="nm" type="text" data-emp="${i}" value="${esc(e.name)}" title="Click to rename"><div class="sub"><select data-type="${i}" title="Employee type">${Object.keys(TYPES).map((k) => `<option value="${k}" ${e.type === k ? 'selected' : ''}>${TYPES[k]}</option>`).join('')}</select><button class="x" data-del="${i}" title="Remove ${esc(e.name)}">×</button></div></th>`;
     });
     h += '<th>Check</th></tr></thead><tbody>';
-    w.days.forEach((cells, di) => {
-      const date = addDays(w.start, di), d = dow(date), { info, probs } = WP.byDay[di];
-      h += `<tr class="${selDay === di ? 'sel' : ''} ${date === TODAY ? 'today' : ''}" data-di="${di}"><td class="date"><small>${DOWL[d]}</small>${md(date)}</td>`;
+    const hoursRow = (ws) => { const { tot, cap } = weekHours(ws); return `<tr class="hrsrow"><td class="date">Hours<br>wk of ${md(ws)}</td>` + S.employees.map((e) => `<td class="hrs ${!limited(e) ? 'mgr' : ''} ${limited(e) && cap[e.id] > R().maxWeek * 60 ? 'over' : ''}" title="${!limited(e) ? 'No hour limits for ' + TYPES[e.type].toLowerCase() : 'Paid hours this pay week' + (cap[e.id] !== tot[e.id] ? ' (' + hrs(tot[e.id]) + ' worked, overtime approved)' : '')}">${tot[e.id] ? hrs(cap[e.id]) : '–'}</td>`).join('') + '<td></td></tr>'; };
+    dates.forEach((day, di) => {
+      const d = dow(day), { info, probs } = RP.byDay[day];
+      const first = di > 0 && wkStart(day) === day;
+      h += `<tr class="${selDay === day ? 'sel' : ''} ${day === TODAY ? 'today' : ''} ${first ? 'wkfirst' : ''}" data-day="${day}"><td class="date"><small>${DOWL[d]}</small>${md(day)}</td>`;
       S.employees.forEach((e) => {
-        const p = info.shifts[e.id], bad = probs.some((x) => x.type === 'hours' && x.id === e.id);
+        const txt = cellText(day, e.id), p = info.shifts[e.id], bad = probs.some((x) => (x.type === 'hours' || x.type === 'low') && x.id === e.id), off = isOff(day, e.id), ot = isOT(day, e.id), so = isSO(day, e.id);
         const cls = p ? (p.error ? 'unread' : presetClass(p)) : '';
-        h += `<td class="shift ${e.type === 'manager' ? 'mgr' : ''}"><input type="text" data-di="${di}" data-id="${e.id}" class="${cls} ${bad ? 'bad' : ''}" value="${esc(cells[e.id] || '')}" title="${p && !p.error ? shiftText(p) + ' · ' + hrs(worked(p, e)) + (e.type === 'part' ? ' on the clock' : ' after lunch') : (p ? 'Not understood' : 'Off')}"></td>`;
+        const title = (p && !p.error ? shiftText(p) + ' · ' + hrs(worked(p, e)) + (e.type === 'part' ? ' on the clock' : ' after lunch') : (p ? 'Not understood' : (so ? 'Scheduled off' : 'Off'))) + (off ? ' · asked for this day off' : '') + (ot ? ' · overtime approved' : '');
+        h += `<td class="shift ${e.type === 'manager' ? 'mgr' : ''}"><input type="text" data-day="${day}" data-id="${e.id}" class="${cls} ${bad ? 'bad' : ''} ${off ? 'offreq' : ''} ${so ? 'schedoff' : ''}" value="${esc(txt)}" placeholder="${off ? 'asked off' : so ? 'scheduled off' : ''}" title="${esc(title)}">${so ? '' : `<button class="ot ${ot ? 'on' : ''}" data-ot="${day}" data-id="${e.id}" title="${ot ? 'Overtime approved for ' + esc(e.name) + ' this day — click to remove' : 'Approve overtime for ' + esc(e.name) + ' this day'}">${ot ? '✓ OT' : 'OT'}</button>`}<button class="so ${so ? 'on' : ''}" data-so="${day}" data-id="${e.id}" title="${so ? esc(e.name) + ' is scheduled off this day — click to put the usual shift back' : 'Schedule ' + esc(e.name) + ' off this day'}">${so ? '✓ off' : 'off'}</button></td>`;
       });
-      h += `<td class="status ${probs.length ? 'bad' : 'ok'}" data-view="${di}" title="See this day hour by hour">${probs.length ? probs.length + ' problem' + (probs.length === 1 ? '' : 's') : '✓ OK'}</td></tr>`;
+      h += `<td class="status ${probs.length ? 'bad' : 'ok'}" data-view="${day}" title="See this day hour by hour">${probs.length ? probs.length + ' problem' + (probs.length === 1 ? '' : 's') : '✓ OK'}</td></tr>`;
+      const next = dates[di + 1]; if (!next || wkStart(next) !== wkStart(day)) h += hoursRow(wkStart(day));
     });
-    h += '<tr class="hrsrow"><td class="date">Hours</td>' + S.employees.map((e) => `<td class="hrs ${e.type === 'manager' ? 'mgr' : ''} ${counted(e) && tot[e.id] > R().maxWeek * 60 ? 'over' : ''}" title="${e.type === 'manager' ? 'Managers are not checked' : 'Paid hours this week'}">${tot[e.id] ? hrs(tot[e.id]) : '–'}</td>`).join('') + '<td></td></tr>';
     $('#week').innerHTML = h + '</tbody>';
   }
   function renderProblems() {
-    const w = cw(), wp = WP || weekProblems(w);
-    $('#problems').innerHTML = wp.total
-      ? `<div class="banner bad">✗ ${wp.total} problem${wp.total === 1 ? '' : 's'} in the week of ${weekLabel(w)}<span class="sp"></span><button class="small primary" id="autoBtn2">✨ Auto-complete</button></div>` + probsHtml(w, wp)
-      : `<div class="banner good">✓ No problems. Openings, closings and hours all check out for the week of ${weekLabel(w)}.</div>`;
+    const dates = viewDates(), rp = RP || rangeProblems(dates);
+    $('#problems').innerHTML = rp.total
+      ? `<div class="banner bad">✗ ${rp.total} problem${rp.total === 1 ? '' : 's'} between ${spanLabel(dates[0], dates[dates.length - 1])}<span class="sp"></span><button class="small primary" id="autoBtn2">✨ Auto-complete</button></div>` + probsHtml(dates, rp)
+      : `<div class="banner good">✓ No problems. Openings, closings and hours all check out for ${spanLabel(dates[0], dates[dates.length - 1])}.</div>`;
   }
   function renderDay() {
     const panel = $('#dayPanel');
-    if (selDay == null || !cw().days[selDay]) { panel.hidden = true; return; }
-    const w = cw(), cells = w.days[selDay], date = addDays(w.start, selDay), d = dow(date);
-    const { info, probs } = dayProblems(cells, date), wins = windowsFor(d) || [];
+    if (!selDay || mode !== 'two') { panel.hidden = true; return; }
+    const day = selDay, d = dow(day), { info, probs, cells } = dayProblems(day), wins = windowsFor(d) || [];
     panel.hidden = false;
-    $('#dayTitle').textContent = DOWL[d] + ' ' + md(date) + ' — hour by hour';
+    $('#dayTitle').textContent = longDate(day) + ' — hour by hour';
     let lo = toMin(hoursOf(d).open), hi = toMin(hoursOf(d).close);
     S.employees.forEach((e) => { const p = info.shifts[e.id]; if (p && !p.error) { lo = Math.min(lo, p.start); hi = Math.max(hi, p.end); } });
     lo = Math.max(0, Math.floor(lo / 60) * 60 - 30); hi = Math.min(24 * 60, Math.ceil(hi / 60) * 60 + 30);
     const step = Math.max(S.slot, 15);
     const emps = S.employees.filter((e) => { const p = info.shifts[e.id]; return p && !p.error; });
-    let h = '<table class="day"><thead><tr><th>Time</th><th></th>' + emps.map((e) => `<th class="${counted(e) ? '' : 'dim'}">${esc(e.name)}<small>${esc(cells[e.id])}</small></th>`).join('') + '<th>On floor</th></tr></thead><tbody>';
+    let h = '<table class="day"><thead><tr><th>Time</th><th></th>' + emps.map((e) => `<th class="${counted(e) ? '' : 'dim'}">${esc(e.name)}<small>${esc(cells[e.id])}${isOT(day, e.id) ? ' · OT' : ''}</small></th>`).join('') + '<th>On floor</th></tr></thead><tbody>';
     let lastWin = null;
     for (let t = lo; t < hi; t += step) {
       const win = wins.find((x) => t >= x.start && t < x.end);
@@ -602,70 +911,76 @@
     const pl = probs.length ? '<ul class="probs" style="margin-bottom:12px">' + probs.map((p) => `<li class="${p.type}"><span>${esc(probText(p))}</span></li>`).join('') + '</ul>' : `<div class="banner good" style="margin-bottom:12px">✓ This day is fine.</div>`;
     $('#dayBody').innerHTML = pl + h;
   }
-  function renderVersions() {
-    const vers = load(LS_VERS) || [], ul = $('#verList');
-    if (!vers.length) { ul.innerHTML = '<li style="color:var(--muted)">No copies kept here yet.</li>'; return; }
-    ul.innerHTML = vers.slice().reverse().map((v) => { const dt = new Date(v.savedAt), wk = (v.state.weeks || []).length; return `<li><div class="vname"><b title="${esc(v.name)}">${esc(v.name)}</b><small>${dt.toLocaleDateString()} ${dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · ${wk} week${wk === 1 ? '' : 's'}</small></div><button class="small" data-load="${v.id}">Open</button><button class="x" data-delver="${v.id}" title="Delete">×</button></li>`; }).join('');
+  function renderYear() {
+    let h = '<thead><tr><th class="d">Date</th>' + S.employees.map((e) => `<th>${esc(e.name)}<br><span style="font:700 10px var(--sans);color:var(--muted)">${TYPES[e.type]}</span></th>`).join('') + '</tr></thead><tbody>';
+    let lastMonth = -1;
+    for (let i = 0; i < YEAR_LEN; i++) {
+      const day = addDays(TODAY, i), dt = parseDate(day), d = dt.getDay();
+      if (dt.getMonth() !== lastMonth) { lastMonth = dt.getMonth(); h += `<tr class="month"><td colspan="${S.employees.length + 1}">${MONL[lastMonth]} ${dt.getFullYear()}</td></tr>`; }
+      h += `<tr class="${d === 0 || d === 6 ? 'wknd' : ''} ${day === TODAY ? 'today' : ''}"><td class="date"><small>${DOW[d]}</small>${md(day)}<button class="small ghost" data-open="${day}" title="Open the two weeks around this day">open</button></td>`;
+      S.employees.forEach((e) => { const txt = cellText(day, e.id), off = isOff(day, e.id), so = isSO(day, e.id); h += `<td class="y ${off ? 'off' : txt ? 'has' : ''} ${so ? 'so' : ''} ${e.type === 'manager' ? 'mgr' : ''}" data-day="${day}" data-id="${e.id}" title="${off ? esc(e.name) + ' asked for ' + md(day) + ' off — click to unmark' : 'Click to mark ' + esc(e.name) + ' as asking for ' + md(day) + ' off'}">${off ? 'OFF ✗' : so ? 'sched. off' : (txt ? esc(txt) : '–')}</td>`; });
+      h += '</tr>';
+    }
+    $('#year').innerHTML = h + '</tbody>';
   }
-  function refresh() { renderTabs(); renderWeek(); renderProblems(); renderDay(); saveState(); }
-  function renderAll() { renderRules(); renderHours(); renderLegend(); refresh(); renderVersions(); renderFileLine(); }
-  function viewDay(di) { selDay = di; renderWeek(); renderDay(); $('#dayPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  function renderAll() { renderRules(); renderHours(); renderLegend(); renderVersions(); renderBackups(); renderTemplates(); renderFileLine(); renderStart(); if (mode === 'two') renderRange(); if (mode === 'year') renderYear(); }
+  function viewDay(day) { selDay = day; renderGrid(); renderDay(); $('#dayPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  function goTo(day) { S.view.start = wkStart(day); selDay = null; setMode('two'); }
+
+  // ---------- start screen events ----------
+  $('#startDate').addEventListener('change', renderStart);
+  $('#startPrev').addEventListener('click', () => { $('#startDate').value = addDays(wkStart($('#startDate').value || TODAY), -7); renderStart(); });
+  $('#startNextWk').addEventListener('click', () => { $('#startDate').value = addDays(wkStart($('#startDate').value || TODAY), 7); renderStart(); });
+  $('#startThis').addEventListener('click', () => { $('#startDate').value = wkStart(TODAY); renderStart(); });
+  $('#startNext').addEventListener('click', () => { $('#startDate').value = addDays(wkStart($('#startDate').value || TODAY), 7); renderStart(); });
+  $('#startGo').addEventListener('click', () => { const v = $('#startDate').value; if (!v) { toast('Pick a start date first'); return; } goTo(v); });
+  $('#startYear').addEventListener('click', () => setMode('year'));
+  $('#startOpen').addEventListener('click', () => open());
+  $('#changeDates').addEventListener('click', () => { $('#startDate').value = S.view.start; renderStart(); setMode('start'); });
+  $('#prevRange').addEventListener('click', () => { S.view.start = addDays(S.view.start, -7); selDay = null; renderRange(); });
+  $('#nextRange').addEventListener('click', () => { S.view.start = addDays(S.view.start, 7); selDay = null; renderRange(); });
+  $('#toYear').addEventListener('click', () => setMode('year'));
+  $('#yearBack').addEventListener('click', () => setMode('two'));
 
   // ---------- settings events ----------
-  $('#rules').addEventListener('change', (e) => { const el = e.target; if (!el.dataset.r) return; if (el.dataset.r === 'slot') S.slot = +el.value; else R()[el.dataset.r] = el.type === 'number' ? Math.max(0, +el.value || 0) : el.value; refresh(); });
-  $('#hours').addEventListener('change', (e) => { const el = e.target; if (el.dataset.h == null) return; S.hours[el.dataset.h] = S.hours[el.dataset.h] || {}; S.hours[el.dataset.h][el.dataset.f] = el.value; refresh(); });
-  $('#legend').addEventListener('input', (e) => { const el = e.target; if (el.dataset.p == null) return; S.presets[+el.dataset.p][el.dataset.f] = el.value; renderTabs(); renderWeek(); renderProblems(); renderDay(); saveState(); });
-  $('#legend').addEventListener('change', (e) => { const el = e.target; if (el.dataset.p == null || el.dataset.f !== 'shift') return; const p = parseShift(el.value, 1); if (p && !p.error) { S.presets[+el.dataset.p].shift = canon(p); renderLegend(); refresh(); } });
+  $('#rules').addEventListener('change', (e) => {
+    const el = e.target;
+    if (el.id === 'weekStartSel') { S.weekStart = +el.value; S.view.start = wkStart(S.view.start); renderStart(); renderRange(); return; }
+    if (!el.dataset.r) return; if (el.dataset.r === 'slot') S.slot = +el.value; else R()[el.dataset.r] = el.type === 'number' ? Math.max(0, +el.value || 0) : el.value; renderRules(); renderRange();
+  });
+  $('#hours').addEventListener('change', (e) => { const el = e.target; if (el.dataset.h == null) return; S.hours[el.dataset.h] = S.hours[el.dataset.h] || {}; S.hours[el.dataset.h][el.dataset.f] = el.value; renderRange(); });
+  $('#legend').addEventListener('input', (e) => { const el = e.target; if (el.dataset.p == null) return; S.presets[+el.dataset.p][el.dataset.f] = el.value; renderGrid(); renderProblems(); renderDay(); saveState(); });
+  $('#legend').addEventListener('change', (e) => { const el = e.target; if (el.dataset.p == null || el.dataset.f !== 'shift') return; const p = parseShift(el.value, 1); if (p && !p.error) { S.presets[+el.dataset.p].shift = canon(p); renderLegend(); renderRange(); } });
   $('#legend').addEventListener('click', (e) => {
-    if (e.target.id === 'addPreset') { S.presets.push({ key: '', label: 'New', shift: '' }); renderLegend(); refresh(); }
-    const b = e.target.closest('button[data-delp]'); if (b) { S.presets.splice(+b.dataset.delp, 1); renderLegend(); refresh(); }
+    if (e.target.id === 'addPreset') { S.presets.push({ key: '', label: 'New', shift: '' }); renderLegend(); renderRange(); }
+    const b = e.target.closest('button[data-delp]'); if (b) { S.presets.splice(+b.dataset.delp, 1); renderLegend(); renderRange(); }
   });
-  $('#addEmp').addEventListener('click', () => { const name = prompt('New person\'s name:'); if (!name) return; S.employees.push({ id: 'e' + Date.now(), name: name.trim(), type: 'full' }); refresh(); });
+  $('#addEmp').addEventListener('click', () => { const name = prompt('New person\'s name:'); if (!name) return; S.employees.push({ id: 'e' + Date.now(), name: name.trim(), type: 'full' }); renderTemplates(); if (mode === 'year') { renderYear(); saveState(); } else renderRange(); });
 
-  // ---------- tabs / week tools ----------
-  function ensureWeek(date) {
-    let i = S.weeks.findIndex((w) => date >= w.start && date <= addDays(w.start, 6)); if (i >= 0) return i;
-    const anchor = S.weeks[0] ? dow(S.weeks[0].start) : 3; let start = date; while (dow(start) !== anchor) start = addDays(start, -1);
-    const days = []; for (let k = 0; k < 7; k++) days.push(Object.assign({}, (S.usual || {})[dow(addDays(start, k))] || {}));
-    S.weeks.push({ start, days }); S.weeks.sort((a, b) => a.start < b.start ? -1 : 1);
-    return S.weeks.findIndex((w) => w.start === start);
-  }
-  $('#tabs').addEventListener('click', (e) => {
-    const b = e.target.closest('button[data-w]'); if (!b) return;
-    if (b.dataset.w === 'new') {
-      const last = S.weeks[S.weeks.length - 1], def = last ? addDays(last.start, 7) : TODAY;
-      const start = prompt('First day of the new week (YYYY-MM-DD):', def); if (!start) return;
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || isNaN(parseDate(start))) { alert('Please use the form YYYY-MM-DD, e.g. 2026-09-30'); return; }
-      if (S.weeks.some((w) => w.start === start)) { toast('That week already exists'); return; }
-      const days = []; for (let i = 0; i < 7; i++) days.push(Object.assign({}, (S.usual || {})[dow(addDays(start, i))] || {}));
-      S.weeks.push({ start, days }); S.weeks.sort((a, b) => a.start < b.start ? -1 : 1);
-      S.cur = S.weeks.findIndex((w) => w.start === start); selDay = null; refresh(); toast('Added week of ' + weekLabel(cw()) + ', filled from usual times');
-    } else { S.cur = +b.dataset.w; selDay = null; refresh(); }
-  });
-  $('#delWeek').addEventListener('click', () => { if (S.weeks.length <= 1) { toast('You need at least one week'); return; } if (!confirm('Delete the week of ' + weekLabel(cw()) + '?')) return; S.weeks.splice(S.cur, 1); S.cur = Math.max(0, S.cur - 1); selDay = null; refresh(); });
-  $('#fillUsual').addEventListener('click', () => { const w = cw(); let n = 0; w.days.forEach((cells, i) => { const u = (S.usual || {})[dow(addDays(w.start, i))] || {}; Object.keys(u).forEach((id) => { if (!cells[id] && u[id]) { cells[id] = u[id]; n++; } }); }); refresh(); toast(n ? 'Filled ' + n + ' empty cell' + (n === 1 ? '' : 's') + ' from usual times' : 'Nothing to fill (only empty cells are filled)'); });
-  $('#setUsual').addEventListener('click', () => { const w = cw(); S.usual = S.usual || {}; w.days.forEach((cells, i) => { S.usual[dow(addDays(w.start, i))] = Object.assign({}, cells); }); saveState(); toast('Saved this week as everyone\'s usual times'); });
+  // ---------- two-week tools ----------
+  $('#fillUsual').addEventListener('click', () => { let n = 0; viewDates().forEach((day) => { const d = S.days[day]; if (!d) return; S.employees.forEach((e) => { if (has(d.s, e.id) && !d.s[e.id] && !d.off[e.id] && !d.so[e.id] && (S.usual[dow(day)] || {})[e.id]) { delete d.s[e.id]; n++; } }); }); renderRange(); toast(n ? 'Filled ' + n + ' empty cell' + (n === 1 ? '' : 's') + ' from usual times' : 'Nothing to fill (only empty cells are filled)'); });
+  $('#setUsual').addEventListener('click', () => { const ws = wkStart(S.view.start); for (let i = 0; i < 7; i++) { const day = addDays(ws, i); S.usual[dow(day)] = cellsOf(day); } renderRange(); renderTemplates(); toast('Saved the week of ' + md(ws) + ' as everyone\'s usual times'); });
+  $('#resetRange').addEventListener('click', () => { if (!confirm('Put these two weeks back to everyone\'s usual times? Your edits, OT checks and scheduled-off marks here are removed. Day-off requests are kept.')) return; viewDates().forEach((day) => { const d = S.days[day]; if (!d) return; S.employees.forEach((e) => { if (!d.off[e.id]) delete d.s[e.id]; }); d.ot = {}; d.so = {}; }); renderRange(); toast('Reset to usual times'); });
   $('#copyDocs').addEventListener('click', async () => {
-    const w = cw(), presetsP = S.presets.map((p) => ({ p, parsed: parseShift(p.shift, 1) }));
+    const dates = viewDates(), presetsP = S.presets.map((p) => ({ p, parsed: parseShift(p.shift, 1) }));
     const cell = (v, extra) => `<td style="border:1px solid #999;padding:2px 6px;text-align:center;${extra || ''}">${esc(v)}</td>`;
     let html = '<table style="border-collapse:collapse;font-family:Arial;font-size:10pt"><tr>' + cell('Date') + cell('') + S.employees.map((e) => cell(e.name, 'font-weight:bold')).join('') + presetsP.map(({ p }) => cell(p.label)).join('') + '</tr>';
     let text = ['Date', '', ...S.employees.map((e) => e.name), ...presetsP.map(({ p }) => p.label)].join('\t') + '\n';
-    w.days.forEach((cells, di) => {
-      const date = addDays(w.start, di), info = dayInfo(cells), vals = S.employees.map((e) => cells[e.id] ? cells[e.id] : '—');
+    dates.forEach((day) => {
+      const cells = cellsOf(day), info = dayInfo(cells), vals = S.employees.map((e) => (cells[e.id] || '—') + (isOT(day, e.id) ? ' (OT)' : ''));
       const cnts = presetsP.map(({ parsed }) => String(S.employees.filter((e) => counted(e) && sameShift(info.shifts[e.id], parsed)).length || ''));
-      html += '<tr>' + cell(md(date)) + cell(DOW[dow(date)]) + vals.map((v) => cell(v)).join('') + cnts.map((v) => cell(v)).join('') + '</tr>';
-      text += [md(date), DOW[dow(date)], ...vals, ...cnts].join('\t') + '\n';
+      html += '<tr>' + cell(md(day)) + cell(DOW[dow(day)]) + vals.map((v) => cell(v)).join('') + cnts.map((v) => cell(v)).join('') + '</tr>';
+      text += [md(day), DOW[dow(day)], ...vals, ...cnts].join('\t') + '\n';
     });
     html += '</table>';
     try { if (navigator.clipboard && window.ClipboardItem) await navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }), 'text/plain': new Blob([text], { type: 'text/plain' }) })]); else await navigator.clipboard.writeText(text); toast('Copied — paste into Google Docs or Sheets'); }
     catch (err) { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('Copied as plain text'); }
   });
 
-  // ---------- week grid edits ----------
+  // ---------- grid edits ----------
   const week = $('#week');
-  function setCell(di, id, value) { const cells = cw().days[di]; const v = (value || '').trim(); if (!v || /^[–—-]+$/.test(v) || /^off$/i.test(v)) delete cells[id]; else { const p = parseShift(v); cells[id] = p && !p.error ? canon(p) : v; } }
-  week.addEventListener('input', (e) => { const el = e.target; if (el.dataset.id) { const cells = cw().days[+el.dataset.di]; if (el.value.trim()) cells[el.dataset.id] = el.value; else delete cells[el.dataset.id]; saveState(); } else if (el.dataset.emp != null) { S.employees[+el.dataset.emp].name = el.value; saveState(); } });
-  week.addEventListener('change', (e) => { const el = e.target; if (el.dataset.id) { setCell(+el.dataset.di, el.dataset.id, el.value); refresh(); } else if (el.dataset.type != null) { S.employees[+el.dataset.type].type = el.value; refresh(); } else if (el.dataset.emp != null) refresh(); });
+  week.addEventListener('input', (e) => { const el = e.target; if (el.dataset.id && el.dataset.day) { dayRec(el.dataset.day, true).s[el.dataset.id] = el.value; saveState(); } else if (el.dataset.emp != null) { S.employees[+el.dataset.emp].name = el.value; saveState(); } });
+  week.addEventListener('change', (e) => { const el = e.target; if (el.dataset.id && el.dataset.day) { setCell(el.dataset.day, el.dataset.id, el.value); renderRange(); } else if (el.dataset.type != null) { S.employees[+el.dataset.type].type = el.value; renderRange(); } else if (el.dataset.emp != null) renderRange(); });
   week.addEventListener('keydown', (e) => {
     const el = e.target; if (!el.dataset.id) return;
     const inputs = Array.from(week.querySelectorAll('td.shift input')), i = inputs.indexOf(el), cols = S.employees.length; let j = null;
@@ -674,44 +989,62 @@
     if (j != null && inputs[j]) { e.preventDefault(); el.blur(); const nx = week.querySelectorAll('td.shift input')[j]; if (nx) { nx.focus(); nx.select(); } }
   });
   week.addEventListener('click', (e) => {
+    const ot = e.target.closest('button.ot'); if (ot) { setOT(ot.dataset.ot, ot.dataset.id, !isOT(ot.dataset.ot, ot.dataset.id)); renderRange(); return; }
+    const so = e.target.closest('button.so'); if (so) { const on = !isSO(so.dataset.so, so.dataset.id); setSO(so.dataset.so, so.dataset.id, on); renderRange(); const nm = S.employees.find((x) => x.id === so.dataset.id); toast(on ? `${nm.name} scheduled off ${longDate(so.dataset.so)}` : `${nm.name} back to ${cellText(so.dataset.so, so.dataset.id) || 'off'} on ${longDate(so.dataset.so)}`); return; }
     const b = e.target.closest('button[data-del]');
-    if (b) { const emp = S.employees[+b.dataset.del]; if (confirm(`Remove ${emp.name} from the schedule (all weeks)?`)) { S.employees.splice(+b.dataset.del, 1); refresh(); } return; }
-    const st = e.target.closest('[data-view]'); if (st) viewDay(+st.dataset.view);
+    if (b) { const emp = S.employees[+b.dataset.del]; if (confirm(`Remove ${emp.name} from the schedule (every week)?`)) { S.employees.splice(+b.dataset.del, 1); renderTemplates(); renderRange(); } return; }
+    const st = e.target.closest('[data-view]'); if (st) viewDay(st.dataset.view);
   });
-  $('#problems').addEventListener('click', (e) => { if (e.target.id === 'autoBtn2') { runAuto(); return; } const li = e.target.closest('[data-view]'); if (li) viewDay(+li.dataset.view); });
-  $('#closeDay').addEventListener('click', () => { selDay = null; renderWeek(); renderDay(); });
+  $('#problems').addEventListener('click', (e) => { if (e.target.id === 'autoBtn2') { runAuto(); return; } const li = e.target.closest('[data-view]'); if (li) viewDay(li.dataset.view); });
+  $('#closeDay').addEventListener('click', () => { selDay = null; renderGrid(); renderDay(); });
+
+  // ---------- year view events ----------
+  $('#year').addEventListener('click', (e) => {
+    const ob = e.target.closest('button[data-open]'); if (ob) { goTo(ob.dataset.open); return; }
+    const td = e.target.closest('td.y'); if (!td) return;
+    const day = td.dataset.day, id = td.dataset.id, now = !isOff(day, id);
+    setOff(day, id, now); saveState();
+    const e2 = S.employees.find((x) => x.id === id), txt = cellText(day, id);
+    td.className = 'y ' + (now ? 'off' : txt ? 'has' : '') + (isSO(day, id) ? ' so' : '') + (e2 && e2.type === 'manager' ? ' mgr' : ''); td.textContent = now ? 'OFF ✗' : isSO(day, id) ? 'sched. off' : (txt || '–');
+    td.title = now ? `${e2.name} asked for ${md(day)} off — click to unmark` : `Click to mark ${e2.name} as asking for ${md(day)} off`;
+    toast(now ? `${e2.name}: ${longDate(day)} marked as a day-off request` : `${e2.name}: ${longDate(day)} request removed${txt ? ', back to ' + txt : ''}`);
+  });
 
   // ---------- quick edit ----------
   function parseQuick(text) {
     const toks = text.trim().split(/\s+/).filter(Boolean); if (!toks.length) return null;
-    let date = null, emp = null, rest = [];
+    let date = null, emp = null, rest = [], ot = false, ask = false;
     for (const t of toks) {
       const dm = /^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/.exec(t);
-      if (!date && dm) { let y = dm[3] ? +dm[3] : parseDate(cw().start).getFullYear(); if (y < 100) y += 2000; const dt = new Date(y, +dm[1] - 1, +dm[2]); if (isNaN(dt) || dt.getMonth() + 1 !== +dm[1] || dt.getDate() !== +dm[2]) return { err: 'That date doesn\'t look right' }; date = iso(dt); continue; }
-      if (!emp) { const lc = t.toLowerCase(); const hits = S.employees.filter((e) => e.name.toLowerCase().startsWith(lc)); if (hits.length === 1) { emp = hits[0]; continue; } if (hits.length > 1) { const exact = hits.find((e) => e.name.toLowerCase() === lc); if (exact) { emp = exact; continue; } return { err: 'Which one: ' + hits.map((e) => e.name).join(', ') + '?' }; } }
+      if (!date && dm) { let y = dm[3] ? +dm[3] : parseDate(S.view.start).getFullYear(); if (y < 100) y += 2000; const dt = new Date(y, +dm[1] - 1, +dm[2]); if (isNaN(dt) || dt.getMonth() + 1 !== +dm[1] || dt.getDate() !== +dm[2]) return { err: 'That date doesn\'t look right' }; date = iso(dt); continue; }
+      const lc = t.toLowerCase();
+      if (lc === 'ot' || lc === 'overtime') { ot = true; continue; }
+      if (lc === 'asked' || lc === 'ask' || lc === 'request' || lc === 'requested' || lc === 'wants') { ask = true; continue; }
+      if (!emp) { const hits = S.employees.filter((e) => e.name.toLowerCase().startsWith(lc)); if (hits.length === 1) { emp = hits[0]; continue; } if (hits.length > 1) { const exact = hits.find((e) => e.name.toLowerCase() === lc); if (exact) { emp = exact; continue; } return { err: 'Which one: ' + hits.map((e) => e.name).join(', ') + '?' }; } }
       rest.push(t);
     }
     if (!date) return { err: 'Add a date like 9/26' };
     if (!emp) return { err: 'Add a name (first few letters are enough)' };
-    const shift = rest.join('').replace(/^(off|x)$/i, '');
+    const shift = rest.join('').replace(/^(off|x|day)$/i, '');
     const p = shift ? parseShift(shift) : null; if (p && p.error) return { err: `Can't read "${rest.join(' ')}" as a shift — try 9-6PM or 11:10-8:10PM` };
-    return { date, emp, shift, p };
+    return { date, emp, shift, p, ot, ask };
   }
   const quick = $('#quick'), quickPrev = $('#quickPrev');
   quick.addEventListener('input', () => {
     const q = parseQuick(quick.value);
-    if (!q) { quickPrev.className = 'preview'; quickPrev.innerHTML = 'Enter applies it. Names only need the first few letters.'; return; }
+    if (!q) { quickPrev.className = 'preview'; quickPrev.innerHTML = 'Enter applies it. Names only need the first few letters. Add “ot” to approve overtime, or “asked off” to record a day-off request.'; return; }
     if (q.err) { quickPrev.className = 'preview err'; quickPrev.textContent = q.err; return; }
     const preset = S.presets.find((x) => x.key && x.key.toLowerCase() === q.shift.toLowerCase());
-    quickPrev.className = 'preview'; quickPrev.innerHTML = `<b>${DOWL[dow(q.date)]} ${md(q.date)}</b> · <b>${esc(q.emp.name)}</b> → <b>${q.p ? canon(q.p) + (preset ? ' (' + esc(preset.label) + ')' : '') : 'off'}</b> — press Enter`;
+    quickPrev.className = 'preview'; quickPrev.innerHTML = `<b>${longDate(q.date)}</b> · <b>${esc(q.emp.name)}</b> → <b>${q.ask && !q.p ? 'asked for the day off' : q.p ? canon(q.p) + (preset ? ' (' + esc(preset.label) + ')' : '') : 'scheduled off'}</b>${q.ot ? ' · <b>overtime approved</b>' : ''} — press Enter`;
   });
   function applyQuick() {
     const q = parseQuick(quick.value); if (!q || q.err) { if (q) toast(q.err); return; }
-    const wi = ensureWeek(q.date); S.cur = wi; const di = Math.round((parseDate(q.date) - parseDate(cw().start)) / 864e5);
-    const before = cw().days[di][q.emp.id] || '';
-    setCell(di, q.emp.id, q.shift); selDay = null; refresh();
-    const inp = week.querySelector(`input[data-di="${di}"][data-id="${q.emp.id}"]`); if (inp) { inp.classList.add('flash'); inp.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
-    toast(`${q.emp.name} on ${DOWL[dow(q.date)]} ${md(q.date)}: ${before || 'off'} → ${cw().days[di][q.emp.id] || 'off'}`);
+    const before = cellText(q.date, q.emp.id) || 'off';
+    if (q.ask && !q.p) setOff(q.date, q.emp.id, true); else if (!q.p) setSO(q.date, q.emp.id, true); else setCell(q.date, q.emp.id, q.shift);
+    if (q.ot) setOT(q.date, q.emp.id, true);
+    if (mode === 'year' && q.ask && !q.p) { renderYear(); saveState(); }
+    else { if (q.date < S.view.start || q.date > viewEnd()) S.view.start = wkStart(q.date); selDay = null; setMode('two'); const inp = week.querySelector(`input[data-day="${q.date}"][data-id="${q.emp.id}"]`); if (inp) { inp.classList.add('flash'); inp.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } }
+    toast(`${q.emp.name} on ${longDate(q.date)}: ${before} → ${q.ask && !q.p ? 'asked off' : (cellText(q.date, q.emp.id) || 'off')}${q.ot ? ' (OT approved)' : ''}`);
     quick.value = ''; quick.dispatchEvent(new Event('input'));
   }
   quick.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); applyQuick(); } });
@@ -719,32 +1052,34 @@
 
   // ---------- auto-complete ----------
   function runAuto() {
-    const w = cw(), before = weekProblems(w);
-    if (!before.total) { toast('Nothing to fix — this week is already clean'); return; }
-    if (!S.employees.filter(counted).length) { toast('Everyone is a manager, so there is nobody to schedule'); return; }
-    const res = optimize(w);
-    const trial = JSON.parse(JSON.stringify(w));
-    res.changes.forEach((c) => { if (c.to) trial.days[c.d][c.id] = c.to; else delete trial.days[c.d][c.id]; });
-    const after = weekProblems(trial);
-    const list = res.changes.length ? `<ul class="changes">${res.changes.map((c) => `<li><b>${DOW[dow(c.date)]} ${md(c.date)}</b><span>${esc(c.name)}</span><span class="chip ${c.from ? '' : 'off'}">${esc(c.from || 'off')}</span><span class="arrow">→</span><span class="chip ${c.to ? 'new' : 'off'}">${esc(c.to || 'off')}</span></li>`).join('')}</ul>` : '<p>No changes found.</p>';
-    const left = after.total ? `<p style="margin-top:12px"><b>Still left after these changes (${after.total}):</b> these need a hand — usually more people, a longer shortcut shift, or a manager covering.</p>${probsHtml(trial, after)}` : `<p style="margin-top:12px;color:var(--teal-ink);font-weight:800">✓ Every problem is solved with these changes.</p>`;
-    modal('✨ Auto-complete', `<p style="margin:0 0 4px;color:var(--muted)">Week of ${weekLabel(w)}: ${before.total} problem${before.total === 1 ? '' : 's'} now → ${after.total} after. ${res.changes.length} change${res.changes.length === 1 ? '' : 's'}, keeping as much of what you typed as possible.</p>${list}${left}`,
-      [{ label: 'Cancel', cls: 'ghost' }, { label: 'Apply changes', cls: 'primary', onClick: () => { if (!res.changes.length) return; res.changes.forEach((c) => { if (c.to) w.days[c.d][c.id] = c.to; else delete w.days[c.d][c.id]; }); selDay = null; refresh(); toast('Applied ' + res.changes.length + ' change' + (res.changes.length === 1 ? '' : 's')); } }]);
+    const dates = viewDates(), before = rangeProblems(dates), lab = spanLabel(dates[0], dates[dates.length - 1]);
+    if (!before.total) { toast('Nothing to fix — these two weeks are already clean'); return; }
+    if (!S.employees.filter(limited).length) { toast('Nobody is full or part time, so there is nobody to move'); return; }
+    const res = optimize(dates);
+    // preview on a scratch copy
+    const keep = S.days; S.days = JSON.parse(JSON.stringify(keep));
+    res.changes.forEach((c) => { setCell(c.day, c.id, c.to); });
+    const after = rangeProblems(dates), afterHtml = probsHtml(dates, after);
+    S.days = keep;
+    const list = res.changes.length ? `<ul class="changes">${res.changes.map((c) => `<li><b>${DOW[dow(c.day)]} ${md(c.day)}</b><span>${esc(c.name)}</span><span class="chip ${c.from ? '' : 'off'}">${esc(c.from || 'off')}</span><span class="arrow">→</span><span class="chip ${c.to ? 'new' : 'off'}">${esc(c.to || 'off')}</span></li>`).join('')}</ul>` : '<p>No changes found.</p>';
+    const left = after.total ? `<p style="margin-top:12px"><b>Still left after these changes (${after.total}):</b> these need a hand — usually more people, an OT approval, or a manager covering.</p>${afterHtml}` : `<p style="margin-top:12px;color:var(--teal-ink);font-weight:800">✓ Every problem is solved with these changes.</p>`;
+    modal('✨ Auto-complete', `<p style="margin:0 0 4px;color:var(--muted)">${lab}: ${before.total} problem${before.total === 1 ? '' : 's'} now → ${after.total} after. ${res.changes.length} change${res.changes.length === 1 ? '' : 's'}, keeping as much of what you typed as possible. Only full- and part-time people are moved; day-off requests are respected.</p>${list}${left}`,
+      [{ label: 'Cancel', cls: 'ghost' }, { label: 'Apply changes', cls: 'primary', onClick: () => { if (!res.changes.length) return; res.changes.forEach((c) => setCell(c.day, c.id, c.to)); selDay = null; renderRange(); toast('Applied ' + res.changes.length + ' change' + (res.changes.length === 1 ? '' : 's')); } }]);
   }
   $('#autoBtn').addEventListener('click', runAuto);
 
   // ---------- print ----------
   $('#printBtn').addEventListener('click', () => {
-    const w = cw(), wp = weekProblems(w);
-    if (!wp.total) { window.print(); return; }
-    modal('Hold on — this week still has problems', `<p style="margin:0 0 4px;color:var(--muted)">Week of ${weekLabel(w)} has ${wp.total} problem${wp.total === 1 ? '' : 's'}. You can print anyway, or go back and fix them first.</p>${probsHtml(w, wp)}`,
+    const dates = viewDates(), rp = rangeProblems(dates);
+    if (!rp.total) { window.print(); return; }
+    modal('Hold on — these two weeks still have problems', `<p style="margin:0 0 4px;color:var(--muted)">${spanLabel(dates[0], dates[dates.length - 1])} has ${rp.total} problem${rp.total === 1 ? '' : 's'}. You can print anyway, or go back and fix them first.</p>${probsHtml(dates, rp)}`,
       [{ label: 'Go back and fix', cls: 'ghost' }, { label: '✨ Auto-complete first', onClick: runAuto }, { label: 'Print anyway', cls: 'primary', onClick: () => setTimeout(() => window.print(), 50) }]);
   });
 
   // ---------- files: save / open on this PC ----------
   const snapshot = () => JSON.parse(JSON.stringify(S));
   const payload = () => ({ app: 'schedule-checker', kind: 'schedule', name: fileName || 'Schedule', savedAt: Date.now(), state: snapshot() });
-  const suggestName = () => ('schedule ' + weekLabel(cw()).replace(/[^\w\- ]+/g, ' ').replace(/\s+/g, ' ').trim() + '.json');
+  const suggestName = () => 'ETC schedule ' + new Date().toISOString().slice(0, 10) + '.json';
   const canPick = () => typeof window.showSaveFilePicker === 'function' && typeof window.showOpenFilePicker === 'function';
   const pickerOpts = { types: [{ description: 'Schedule file', accept: { 'application/json': ['.json'] } }] };
   function download(name, obj) { const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }
@@ -762,23 +1097,23 @@
     }
     saveAs();
   }
-  function loadState(st, name) { S = migrate(JSON.parse(JSON.stringify(st))); selDay = null; renderAll(); fileName = name || ''; dirty = false; renderFileLine(); }
+  function loadState(st, name) { S = migrate(JSON.parse(JSON.stringify(st))); selDay = null; fileName = name || ''; dirty = false; store(LS_STATE, S); renderAll(); if (mode === 'start') setMode('two'); }
   function readSchedule(text, name) {
     const d = JSON.parse(text); if (d.app !== 'schedule-checker') throw new Error('not a schedule file');
-    if (d.kind === 'backup' && Array.isArray(d.versions)) { const vers = load(LS_VERS) || [], have = new Set(vers.map((v) => v.id)); let added = 0; d.versions.forEach((v) => { if (v && v.state && v.state.weeks && !have.has(v.id)) { vers.push({ ...v, state: migrate(v.state) }); added++; } }); store(LS_VERS, vers); renderVersions(); toast(`Restored ${added} cop${added === 1 ? 'y' : 'ies'} from backup`); return false; }
-    if (!d.state || !d.state.weeks) throw new Error('unrecognised file');
+    if (d.kind === 'backup' && Array.isArray(d.versions)) { const vers = load(LS_VERS) || [], have = new Set(vers.map((v) => v.id)); let added = 0; d.versions.forEach((v) => { if (v && v.state && !have.has(v.id)) { vers.push({ ...v, state: migrate(v.state) }); added++; } }); store(LS_VERS, vers); renderVersions(); toast(`Restored ${added} cop${added === 1 ? 'y' : 'ies'} from backup`); return false; }
+    if (!d.state || !(d.state.days || d.state.weeks)) throw new Error('unrecognised file');
     loadState(d.state, name); toast('Opened ' + name); return true;
   }
   async function open() {
     if (dirty && fileName && !confirm('Open another schedule? Unsaved changes here will be replaced (Cancel and press Save first if you want to keep them).')) return;
     if (canPick()) {
       try { const [h] = await window.showOpenFilePicker(pickerOpts); const f = await h.getFile(); if (readSchedule(await f.text(), f.name)) { fileHandle = h; renderFileLine(); } }
-      catch (err) { if (err && err.name === 'AbortError') return; if (err && /not a schedule|unrecognised|JSON/.test(err.message)) alert('That file could not be read as a Schedule Checker file.\n\n' + err.message); else $('#importFile').click(); }
+      catch (err) { if (err && err.name === 'AbortError') return; if (err && /not a schedule|unrecognised|JSON/.test(err.message)) alert('That file could not be read as a Schedule Maker file.\n\n' + err.message); else $('#importFile').click(); }
     } else $('#importFile').click();
   }
   $('#importFile').addEventListener('change', (e) => {
     const f = e.target.files[0]; if (!f) return; const r = new FileReader();
-    r.onload = () => { try { if (readSchedule(r.result, f.name)) { fileHandle = null; renderFileLine(); } } catch (err) { alert('That file could not be read as a Schedule Checker file.\n\n' + err.message); } e.target.value = ''; };
+    r.onload = () => { try { if (readSchedule(r.result, f.name)) { fileHandle = null; renderFileLine(); } } catch (err) { alert('That file could not be read as a Schedule Maker file.\n\n' + err.message); } e.target.value = ''; };
     r.readAsText(f);
   });
   $('#openBtn').addEventListener('click', open);
@@ -789,7 +1124,7 @@
   const newId = () => Date.now() + '-' + Math.random().toString(36).slice(2, 7);
   $('#saveVer').addEventListener('click', () => {
     const vers = load(LS_VERS) || [];
-    const name = $('#verName').value.trim() || (fileName ? fileName.replace(/\.json$/i, '') : 'Week of ' + weekLabel(cw())) + ' – ' + new Date().toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const name = $('#verName').value.trim() || (fileName ? fileName.replace(/\.json$/i, '') : 'Schedule') + ' – ' + new Date().toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     vers.push({ id: newId(), name, savedAt: Date.now(), state: snapshot() });
     if (!store(LS_VERS, vers)) { toast('Could not keep a copy (browser storage full or blocked). Use Save instead.'); return; }
     $('#verName').value = ''; renderVersions(); toast('Kept a copy: "' + name + '"');
@@ -802,7 +1137,9 @@
   window.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(); } if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'o') { e.preventDefault(); open(); } if (e.key === 'Escape') $('#modalHost').innerHTML = ''; });
   window.addEventListener('beforeunload', (e) => { if (dirty && fileName) { e.preventDefault(); e.returnValue = ''; } });
 
-  renderAll(); dirty = false; renderFileLine();
+  // ---------- go ----------
+  $('#startDate').value = wkStart(TODAY);
+  renderAll(); setMode('start'); dirty = false; renderFileLine();
 })();
 </script>
 </body>

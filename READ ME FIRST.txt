@@ -70,30 +70,71 @@ relaunch.
 USING THE PROGRAM
 ────────────────────────────────────────────────────────────
 
-• The grid is one week: rows are days, columns are people. Type a shift
-  like 9-6PM or 11:10-8:10PM, or a shortcut letter (O, M, C, A, P). Blank
-  means off. Times are tidied for you: AM blank, PM marked.
+• FIRST SCREEN: pick the Wednesday your two weeks start on (the calendar
+  only allows Wednesdays, because that is when the pay week starts) and
+  a small preview of those two weeks appears with a problem count. Press
+  "Open these two weeks". ◀ ▶ and "Next week" step one week at a time;
+  "This week" jumps back to today's week.
+
+• THE GRID is two weeks: rows are days, columns are people. Every day
+  starts out filled with each person's usual shift. Type a shift like
+  9-6PM or 11:10-8:10PM, or a shortcut letter (O, M, C, A, P). Blank means
+  off. Times are tidied for you: AM blank, PM marked. Use ◀ ▶ to roll one
+  week at a time, or "Change dates" to go back to the first screen.
+
+• SCHEDULED OFF: hover any cell and click the little "off" button to take
+  that person off for the whole day (click again to put the usual shift
+  back). Typing "off" in a cell, or "9/27 Omar off" in Quick edit, does the
+  same. Striped cell = scheduled off.
+
+• OVERTIME: hover any cell and click the little OT button to approve
+  overtime for that person on that day. That day skips the 8-hour limit,
+  and the hours over 8 that day don't count toward the 40-hour week.
+
+• YEAR CALENDAR (📅 button): every day for the next year, filled in with
+  the usual shifts. Click a cell to mark that someone asked for that day
+  off (click again to unmark). Requests show as dashed red cells in the
+  two-week grid, count as a problem if someone gets scheduled anyway, and
+  Auto-complete never schedules over one. "open" next to a date jumps to
+  those two weeks.
+
+• PEOPLE TYPES (under each name): Owner counts on the floor with no hour
+  limits (Drea). Manager is shown but never counted (Jenny). Full time
+  and Part time (5 hours or less a day, no lunch) get the hour rules.
+  "+ Person" adds someone; the × under a name removes them everywhere.
 
 • Problems show under the grid and on each day's check button. Click a
   day's check to see it hour by hour.
 
-• ✨ Auto-complete proposes the fewest changes that clear every problem and
-  shows you the list before applying anything.
+• ✨ Auto-complete proposes the fewest changes that clear every problem
+  and shows you the list before applying anything. It only moves full-
+  and part-time people.
 
-• ⚡ Quick edit at the top: type  9/26 Kari 3:10PM-8:10PM  or  9/27 Omar off
-  and press Enter.
+• ⚡ Quick edit at the top:  9/26 Kari 3:10PM-8:10PM   ·   9/27 Omar off
+  ·   10/3 Dani asked off   ·   9/30 Ivan 9-8:10PM ot   — then Enter.
 
-• Save / Open (right side) write and read schedule files on this PC. A file
-  holds every week in the tabs plus names, rules and hours. Ctrl+S saves.
+• WEEK TEMPLATES (right side): a template is one saved pay week. Pick one
+  from the list to preview it, then "Apply to 1st week" / "2nd week" / "Both"
+  to copy it onto the weeks on screen (people who asked for a day off are
+  left off). To build one from scratch: "+ New blank template", apply it to
+  a week, fill the week in on the grid, then "Update from 1st week" to save
+  it back. "Save 1st week as new…" keeps the week on screen as a template.
+  "Make this the usual week" is the important one: every day you haven't
+  edited, across the whole calendar and the year view, follows that week.
+  The usual week is yours to change whenever the schedule changes.
 
-• Print checks the week first and lets you print anyway if you choose.
+• EVERYTHING IS SAVED ON THIS COMPUTER AUTOMATICALLY, including the year
+  calendar and its day-off requests. Save / Open (right side) also write
+  and read a schedule file you can move to another PC. Ctrl+S saves.
 
-• Settings (right side): the staffing rules, store hours per day, and the
-  shift shortcuts. Each person is a Manager (never counted, no hour limits),
-  Full time, or Part time (5 hours or less a day, no lunch).
+• Print checks the two weeks first and lets you print anyway if you choose.
 
-Your saved schedules live on this computer. Each computer running the
-program has its own — use Save and send the file if another PC needs it.
+• Settings (right side): staffing rules, store hours per day, the day the
+  pay week starts on, and the shift shortcuts. "Save as usual" makes the
+  first week on screen everyone's new default.
+
+Each computer running the program has its own saved calendar — use Save
+and send the file if another PC needs the same one.
 
 
 ────────────────────────────────────────────────────────────
@@ -105,3 +146,37 @@ HOW TO SHIP AN UPDATE  (owner only)
 3. Upload app.html AND version.txt to the GitHub repo
    (madisonhypes/etc-schedule-maker). Every computer picks it up on the
    next launch. The version badge at the top-left shows which one is running.
+
+
+────────────────────────────────────────────────────────────
+DATA SAFETY BETWEEN VERSIONS  (developer notes)
+────────────────────────────────────────────────────────────
+
+Each computer's calendar is saved in the browser under one fixed name
+(schedchk.state.v4 — never rename it) and carries a data-format number
+(the "v" field, STATE_V in the code). On every launch migrate() upgrades
+whatever is stored, step by step, to the current format, so an update
+never needs anyone to re-enter anything. Files opened with Open go through
+the same migrate().
+
+Who owns what:
+  • The CODE only gives a brand-new computer something to start from (a
+    first roster, usual week, hours, rules and shortcuts). That starting
+    point is not special and will go stale; nothing in the program should
+    lean on it.
+  • The USER owns everything on their own machine: people and their types,
+    hours, rules, templates, the usual week, day-off requests and every
+    schedule. Program updates must never rewrite any of it — they only
+    convert the data's shape when the code needs a new shape.
+
+Rules when changing how data is stored:
+  1. Never change the storage key.
+  2. Bump STATE_V by one and add an "if (st.v < N) { ... st.v = N; }" step
+     to migrate() that converts the old shape to the new one. Never delete
+     old steps — an old computer may skip several versions at once.
+  3. Anything new must also have a sensible default for old data.
+
+Safety net: before migrate() converts anything, the untouched old data is
+copied to schedchk.backups (last three kept). They appear in the app under
+Schedules → "Safety copies from before updates" with Restore and Download
+buttons, so a bad conversion can always be undone.
