@@ -314,7 +314,7 @@
 
 <div class="top">
   <h1>ETC Schedule Maker<svg class="stroke" viewBox="0 0 300 12" preserveAspectRatio="none"><path d="M2 8 C 60 2, 120 11, 180 6 S 260 3, 298 7" fill="none" stroke="#e5643f" stroke-width="5" stroke-linecap="round"/></svg></h1>
-  <span class="ver" title="Program version">v1.7.4</span>
+  <span class="ver" title="Program version">v1.7.5</span>
   <span class="tag">thin openings, thin closings &amp; long weeks, caught before they happen</span>
   <div class="actions" id="topActions">
     <button id="autoBtn" class="primary">✨ Auto-complete</button>
@@ -500,7 +500,7 @@
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '1.7.4';
+  const APP_VERSION = '1.7.5';
   const LS_STATE = 'schedchk.state.v4', LS_VERS = 'schedchk.versions.v4';
   const OLD_VERS = ['schedchk.versions.v3', 'schedchk.versions.v2'];
   const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -1210,23 +1210,44 @@
   window.addEventListener('beforeunload', (e) => { if (dirty && fileName) { e.preventDefault(); e.returnValue = ''; } });
 
   // ---------- updates: check GitHub, and switch to a newer version in place ----------
+  // raw.githubusercontent.com caches files for 5 minutes and ignores ?nocache, so the version is asked from the
+  // GitHub API (never cached) and the download is verified to really be that version before it is switched in.
   const UPDATE_BASE = 'https://raw.githubusercontent.com/madisonhypes/etc-schedule-maker/main';
+  const API_BASE = 'https://api.github.com/repos/madisonhypes/etc-schedule-maker/contents';
   const verNum = (v) => { const q = String(v).trim().split('.').map(Number); return (q[0] || 0) * 1e6 + (q[1] || 0) * 1e3 + (q[2] || 0); };
+  const isVer = (v) => /^\d+\.\d+\.\d+$/.test(String(v || '').trim());
+  const b64utf8 = (b) => new TextDecoder().decode(Uint8Array.from(atob(String(b).replace(/\s/g, '')), (c) => c.charCodeAt(0)));
+  async function apiFile(name) { const r = await fetch(API_BASE + '/' + name + '?ref=main&t=' + Date.now(), { cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } }); if (!r.ok) throw new Error('GitHub API answered ' + r.status); const j = await r.json(); if (!j || !j.content) throw new Error('GitHub API sent no file'); return b64utf8(j.content); }
+  async function rawFile(name) { const r = await fetch(UPDATE_BASE + '/' + name + '?nocache=' + Date.now(), { cache: 'no-store' }); if (!r.ok) throw new Error('GitHub answered ' + r.status); return r.text(); }
+  async function remoteVersion() {
+    let api = null, raw = null, err = null;
+    try { api = (await apiFile('version.txt')).trim(); } catch (e) { err = e; }
+    try { raw = (await rawFile('version.txt')).trim(); } catch (e) { err = err || e; }
+    const cands = [api, raw].filter(isVer); if (!cands.length) throw err || new Error('no version number found');
+    return cands.sort((a, b) => verNum(b) - verNum(a))[0];
+  }
   async function checkUpdate(manual) {
     const btn = $('#updBtn'); if (manual) { btn.textContent = '⟳ Checking…'; btn.disabled = true; }
     try {
-      const r = await fetch(UPDATE_BASE + '/version.txt?nocache=' + Date.now(), { cache: 'no-store' }); if (!r.ok) throw new Error('GitHub answered ' + r.status);
-      const remote = (await r.text()).trim(); if (!/^\d+\.\d+\.\d+$/.test(remote)) throw new Error('version.txt on GitHub is not a version number');
-      if (verNum(remote) > verNum(APP_VERSION)) { btn.textContent = '⬆ Update to v' + remote; btn.classList.add('primary'); btn.classList.remove('ghost'); btn.disabled = false; btn.dataset.remote = remote; btn.title = 'Version ' + remote + ' is on GitHub — click to switch to it now (your data stays)'; if (manual) toast('Version ' + remote + ' is ready — click the Update button to switch now'); }
-      else { btn.textContent = '↻ Check for update'; btn.classList.remove('primary'); btn.classList.add('ghost'); btn.disabled = false; delete btn.dataset.remote; if (manual) toast('You have the latest version (v' + APP_VERSION + ')'); }
-    } catch (e) { btn.textContent = '↻ Check for update'; btn.disabled = false; if (manual) toast('Could not check right now: ' + e.message); }
+      const remote = await remoteVersion();
+      if (verNum(remote) > verNum(APP_VERSION)) { btn.textContent = '⬆ Update to v' + remote; btn.classList.add('primary'); btn.classList.remove('ghost'); btn.disabled = false; btn.dataset.remote = remote; btn.title = 'Version ' + remote + ' is on GitHub — click to switch to it now (your data stays)'; if (manual) toast('GitHub has v' + remote + ' and you have v' + APP_VERSION + ' — click the Update button to switch now'); }
+      else { btn.textContent = '↻ Check for update'; btn.classList.remove('primary'); btn.classList.add('ghost'); btn.disabled = false; delete btn.dataset.remote; if (manual) toast('GitHub shows v' + remote + ', same as yours. If you uploaded moments ago, give it a minute and try again.'); }
+    } catch (e) { btn.textContent = '↻ Check for update'; btn.disabled = false; if (manual) toast('Could not check: ' + e.message + '. Closing and reopening the program also updates it.'); }
   }
   async function applyUpdate(remote) {
     const btn = $('#updBtn'); btn.textContent = '⬇ Downloading v' + remote + '…'; btn.disabled = true;
+    const versionIn = (html) => { const m = /APP_VERSION = '(\d+\.\d+\.\d+)'/.exec(html); return m ? m[1] : null; };
+    const looksWhole = (html) => html.length > 40000 && /<\/html>\s*$/i.test(html);
     try {
-      const r = await fetch(UPDATE_BASE + '/app.html?nocache=' + Date.now(), { cache: 'no-store' }); if (!r.ok) throw new Error('GitHub answered ' + r.status);
-      const html = await r.text(); if (html.length < 40000 || !/<\/html>\s*$/i.test(html)) throw new Error('the download looked incomplete');
-      store(LS_STATE, S); try { sessionStorage.setItem('schedchk.justUpdated', remote); } catch (err) {}
+      let html = null, got = null;
+      try { html = await rawFile('app.html'); got = versionIn(html); } catch (e) { html = null; }
+      if (!html || !looksWhole(html) || verNum(got) < verNum(remote)) {   // raw copy missing or still the old cached one -> ask the API for the real file
+        btn.textContent = '⬇ Fetching the fresh copy…';
+        html = await apiFile('app.html'); got = versionIn(html);
+        if (!looksWhole(html)) throw new Error('the download looked incomplete');
+      }
+      if (verNum(got) <= verNum(APP_VERSION)) throw new Error('GitHub is still serving v' + got + ' — try again in a minute');
+      store(LS_STATE, S); try { sessionStorage.setItem('schedchk.justUpdated', got); } catch (err) {}
       document.open(); document.write(html); document.close();
     } catch (e) { btn.textContent = '⬆ Update to v' + remote; btn.disabled = false; toast('Update failed: ' + e.message + '. Closing and reopening the program will update it instead.'); }
   }
