@@ -149,6 +149,12 @@
   table.week td.shift:hover button.ot { opacity: .75; }
   table.week td.shift button.ot:hover { opacity: 1; transform: none; box-shadow: none; }
   table.week td.shift button.ot.on { opacity: 1; background: var(--teal); color: #fff; }
+  table.week td.shift .grab { position: absolute; top: -6px; left: -4px; width: 17px; height: 17px; border-radius: 50%; background: #fff; border: 1.5px solid var(--ink); font-size: 10px; line-height: 14px; text-align: center; cursor: grab; opacity: 0; transition: opacity .12s; z-index: 2; user-select: none; color: var(--ink); }
+  table.week td.shift:hover .grab { opacity: .75; }
+  table.week td.shift .grab:hover { opacity: 1; background: var(--mustard); }
+  table.week td.shift .grab:active { cursor: grabbing; }
+  table.week td.shift.dragging input { opacity: .35; }
+  table.week td.shift.over input { outline: 3px solid var(--teal); outline-offset: 1px; }
   table.week td.shift button.so { position: absolute; bottom: -7px; right: -5px; width: 30px; height: 18px; padding: 0; font-size: 9px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; box-shadow: none; opacity: 0; transition: opacity .12s; line-height: 1; z-index: 2; }
   table.week td.shift:hover button.so { opacity: .75; }
   table.week td.shift button.so:hover { opacity: 1; transform: none; box-shadow: none; }
@@ -264,14 +270,34 @@
   .print-only { display: none; }
   [hidden] { display: none !important; }
   @media print {
-    body { background: #fff; } body::before, body::after { display: none; }
-    .top, .quick, aside, .hint, .rangebar, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub, #startScreen, #yearCard, button.ot:not(.on) { display: none !important; }
+    @page { size: letter landscape; margin: 8mm; }
+    body { background: #fff; color: #000; font-size: 9pt; } body::before, body::after { display: none; }
+    .top, .quick, aside, .hint, .rangebar, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub, #startScreen, #yearCard, button.ot:not(.on), button.so, .grab { display: none !important; }
     main { display: block; padding: 0; }
-    .card { box-shadow: none; margin: 0; border: none; }
-    .print-only { display: block; font: 800 22px var(--serif); padding: 0 14px 6px; }
-    table.week td.shift input { border: 1px solid #bbb !important; background: #fff !important; color: #000 !important; }
-    table.week td.status { border: 1px solid #bbb; }
-    table.week td.shift button.ot.on { opacity: 1; background: #fff; color: #000; border-color: #000; }
+    .card, .card:nth-child(even) { box-shadow: none; margin: 0; border: none; border-radius: 0; overflow: visible; }
+    .card > h2 { display: none; }
+    .print-only { display: block; font: 800 15pt var(--serif); padding: 0 0 4pt; color: #000; }
+    .wrap { overflow: visible; padding: 0; }
+    table.week { width: 100%; table-layout: fixed; border-spacing: 0; border-collapse: collapse; }
+    table.week th, table.week td { border: 1px solid #000 !important; padding: 2pt 3pt !important; color: #000 !important; background: #fff !important; position: static !important; border-radius: 0 !important; box-shadow: none !important; }
+    table.week th:first-child { width: 58pt; } table.week th:last-child { width: 48pt; }
+    table.week th.emp input.nm { font: 800 9.5pt var(--serif); padding: 0; border: none; background: #fff; color: #000; }
+    table.week td.date { font-size: 9pt; } table.week td.date small { font-size: 6.5pt; color: #000; }
+    table.week tr.today td.date { color: #000; text-decoration: underline; }
+    table.week tr.wkfirst td { border-top: 3px double #000 !important; padding-top: 2pt !important; }
+    table.week td.shift input { min-width: 0; width: 100%; border: none !important; background: #fff !important; color: #000 !important; font-size: 8.5pt; padding: 1pt 0; border-radius: 0; font-weight: 700; opacity: 1 !important; font-style: normal; box-shadow: none; }
+    table.week td.shift input.bad, table.week td.shift input.unread, table.week td.shift input.offreq, table.week td.shift input.schedoff, table.week td.shift input.p0, table.week td.shift input.p1, table.week td.shift input.p2, table.week td.shift input.p3, table.week td.shift input.p4, table.week td.shift input.has { background: #fff !important; border: none !important; color: #000 !important; }
+    table.week td.shift input.bad { text-decoration: underline; }
+    table.week td.shift input::placeholder { color: #000 !important; font-style: italic; font-weight: 600; opacity: 1; }
+    table.week td.shift input.offreq::placeholder { text-decoration: underline; }
+    table.week td.shift.mgr input { font-style: italic; }
+    table.week td.shift button.ot.on { display: block; position: absolute; top: 0; right: 0; opacity: 1; background: #fff; color: #000; border: 1px solid #000; font-size: 6pt; width: auto; height: auto; padding: 0 2pt; box-shadow: none; line-height: 1.3; border-radius: 0; }
+    table.week td.status { font-size: 7pt; padding: 1pt !important; font-weight: 800; white-space: normal; }
+    table.week td.status.bad { text-decoration: underline; }
+    table.week td.hrs { font-size: 7.5pt; color: #000 !important; }
+    table.week td.hrs.over { font-weight: 900; text-decoration: underline; }
+    table.week td.hrs.mgr { opacity: 1; font-weight: 600; }
+    table.week tr.hrsrow td.date { font-size: 6.5pt; color: #000; }
   }
 </style>
 </head>
@@ -279,7 +305,7 @@
 
 <div class="top">
   <h1>ETC Schedule Maker<svg class="stroke" viewBox="0 0 300 12" preserveAspectRatio="none"><path d="M2 8 C 60 2, 120 11, 180 6 S 260 3, 298 7" fill="none" stroke="#e5643f" stroke-width="5" stroke-linecap="round"/></svg></h1>
-  <span class="ver" title="Program version">v1.5.1</span>
+  <span class="ver" title="Program version">v1.6.0</span>
   <span class="tag">thin openings, thin closings &amp; long weeks, caught before they happen</span>
   <div class="actions" id="topActions">
     <button id="autoBtn" class="primary">✨ Auto-complete</button>
@@ -315,6 +341,7 @@
     <div id="miniSum" style="margin:6px 0 14px;font-weight:800"></div>
     <div class="row">
       <button class="primary big" id="startGo">Open these two weeks →</button>
+      <button class="ghost" id="startCancel">Back</button>
     </div>
     <div class="alt">
       <p>Or, plan further ahead:</p>
@@ -336,7 +363,7 @@
           <button class="small" id="prevRange" title="Back one week">◀</button>
           <span class="lab" id="rangeLab"></span>
           <button class="small" id="nextRange" title="Forward one week">▶</button>
-          <button class="small ghost" id="changeDates">Change dates</button>
+          <button class="small ghost" id="changeDates" title="Pick a different pair of weeks, with a preview">Pick weeks…</button>
           <button class="small teal" id="toYear">📅 Year calendar</button>
         </div>
         <div class="toolbar">
@@ -348,7 +375,7 @@
       </h2>
       <div class="print-only" id="printTitle"></div>
       <div class="wrap"><table class="week" id="week"></table></div>
-      <p class="hint" style="padding: 0 20px 14px">Type shifts like <kbd>9-6PM</kbd> or <kbd>11:10-8:10PM</kbd>, or a shortcut letter. Blank means off; a dashed red cell means that person asked for the day off. Hover a cell and click <kbd>off</kbd> to schedule that person off for the day, or <kbd>OT</kbd> to approve overtime. <kbd>Enter</kbd> moves down a row. Click a day's check to see it hour by hour.</p>
+      <p class="hint" style="padding: 0 20px 14px">Type shifts like <kbd>9-6PM</kbd> or <kbd>11:10-8:10PM</kbd>, or a shortcut letter. Blank means off; a dashed red cell means that person asked for the day off. Hover a cell: drag the <kbd>⠿</kbd> dot to move a shift to another cell (drop on a filled cell to swap, hold <kbd>Ctrl</kbd> to copy), click <kbd>off</kbd> to schedule that person off for the day, or <kbd>OT</kbd> to approve overtime. <kbd>Enter</kbd> moves down a row. Click a day's check to see it hour by hour.</p>
     </div>
 
     <div class="card" id="probCard">
@@ -463,7 +490,7 @@
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '1.5.1';
+  const APP_VERSION = '1.6.0';
   const LS_STATE = 'schedchk.state.v4', LS_VERS = 'schedchk.versions.v4';
   const OLD_VERS = ['schedchk.versions.v3', 'schedchk.versions.v2'];
   const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -872,7 +899,7 @@
         const txt = cellText(day, e.id), p = info.shifts[e.id], bad = probs.some((x) => (x.type === 'hours' || x.type === 'low') && x.id === e.id), off = isOff(day, e.id), ot = isOT(day, e.id), so = isSO(day, e.id);
         const cls = p ? (p.error ? 'unread' : presetClass(p)) : '';
         const title = (p && !p.error ? shiftText(p) + ' · ' + hrs(worked(p, e)) + (e.type === 'part' ? ' on the clock' : ' after lunch') : (p ? 'Not understood' : (so ? 'Scheduled off' : 'Off'))) + (off ? ' · asked for this day off' : '') + (ot ? ' · overtime approved' : '');
-        h += `<td class="shift ${e.type === 'manager' ? 'mgr' : ''}"><input type="text" data-day="${day}" data-id="${e.id}" class="${cls} ${bad ? 'bad' : ''} ${off ? 'offreq' : ''} ${so ? 'schedoff' : ''}" value="${esc(txt)}" placeholder="${off ? 'asked off' : so ? 'scheduled off' : ''}" title="${esc(title)}">${so ? '' : `<button class="ot ${ot ? 'on' : ''}" data-ot="${day}" data-id="${e.id}" title="${ot ? 'Overtime approved for ' + esc(e.name) + ' this day — click to remove' : 'Approve overtime for ' + esc(e.name) + ' this day'}">${ot ? '✓ OT' : 'OT'}</button>`}<button class="so ${so ? 'on' : ''}" data-so="${day}" data-id="${e.id}" title="${so ? esc(e.name) + ' is scheduled off this day — click to put the usual shift back' : 'Schedule ' + esc(e.name) + ' off this day'}">${so ? '✓ off' : 'off'}</button></td>`;
+        h += `<td class="shift ${e.type === 'manager' ? 'mgr' : ''}"><input type="text" data-day="${day}" data-id="${e.id}" class="${cls} ${bad ? 'bad' : ''} ${off ? 'offreq' : ''} ${so ? 'schedoff' : ''}" value="${esc(txt)}" placeholder="${off ? 'asked off' : so ? 'scheduled off' : ''}" title="${esc(title)}">${so ? '' : `<button class="ot ${ot ? 'on' : ''}" data-ot="${day}" data-id="${e.id}" title="${ot ? 'Overtime approved for ' + esc(e.name) + ' this day — click to remove' : 'Approve overtime for ' + esc(e.name) + ' this day'}">${ot ? '✓ OT' : 'OT'}</button>`}${txt ? `<span class="grab" draggable="true" data-day="${day}" data-id="${e.id}" title="Drag this shift to another cell to move it (hold Ctrl to copy). Dropping on a filled cell swaps the two.">⠿</span>` : ''}<button class="so ${so ? 'on' : ''}" data-so="${day}" data-id="${e.id}" title="${so ? esc(e.name) + ' is scheduled off this day — click to put the usual shift back' : 'Schedule ' + esc(e.name) + ' off this day'}">${so ? '✓ off' : 'off'}</button></td>`;
       });
       h += `<td class="status ${probs.length ? 'bad' : 'ok'}" data-view="${day}" title="See this day hour by hour">${probs.length ? probs.length + ' problem' + (probs.length === 1 ? '' : 's') : '✓ OK'}</td></tr>`;
       const next = dates[di + 1]; if (!next || wkStart(next) !== wkStart(day)) h += hoursRow(wkStart(day));
@@ -935,6 +962,7 @@
   $('#startNext').addEventListener('click', () => { $('#startDate').value = addDays(wkStart($('#startDate').value || TODAY), 7); renderStart(); });
   $('#startGo').addEventListener('click', () => { const v = $('#startDate').value; if (!v) { toast('Pick a start date first'); return; } goTo(v); });
   $('#startYear').addEventListener('click', () => setMode('year'));
+  $('#startCancel').addEventListener('click', () => setMode('two'));
   $('#startOpen').addEventListener('click', () => open());
   $('#changeDates').addEventListener('click', () => { $('#startDate').value = S.view.start; renderStart(); setMode('start'); });
   $('#prevRange').addEventListener('click', () => { S.view.start = addDays(S.view.start, -7); selDay = null; renderRange(); });
@@ -988,6 +1016,28 @@
     else if (e.key === 'ArrowRight' && el.selectionStart === el.value.length) j = i + 1; else if (e.key === 'ArrowLeft' && el.selectionStart === 0) j = i - 1;
     if (j != null && inputs[j]) { e.preventDefault(); el.blur(); const nx = week.querySelectorAll('td.shift input')[j]; if (nx) { nx.focus(); nx.select(); } }
   });
+  // drag a shift from one cell to another (move, swap, or Ctrl-copy)
+  let drag = null;
+  const cellOf = (el) => { const td = el && el.closest ? el.closest('td.shift') : null; if (!td) return null; const inp = td.querySelector('input'); return inp ? { td, day: inp.dataset.day, id: inp.dataset.id } : null; };
+  week.addEventListener('dragstart', (e) => {
+    const g = e.target.closest ? e.target.closest('.grab') : null; if (!g) { e.preventDefault(); return; }
+    drag = { day: g.dataset.day, id: g.dataset.id }; const c = cellOf(g); if (c) { c.td.classList.add('dragging'); try { e.dataTransfer.setDragImage(c.td.querySelector('input'), 30, 12); } catch (err) {} }
+    try { e.dataTransfer.effectAllowed = 'copyMove'; e.dataTransfer.setData('text/plain', drag.day + '|' + drag.id); } catch (err) {}
+  });
+  week.addEventListener('dragover', (e) => { if (!drag) return; const c = cellOf(e.target); if (!c) return; e.preventDefault(); try { e.dataTransfer.dropEffect = e.ctrlKey ? 'copy' : 'move'; } catch (err) {} week.querySelectorAll('td.shift.over').forEach((t) => t.classList.remove('over')); c.td.classList.add('over'); });
+  week.addEventListener('dragleave', (e) => { const c = cellOf(e.target); if (c && !c.td.contains(e.relatedTarget)) c.td.classList.remove('over'); });
+  week.addEventListener('drop', (e) => {
+    if (!drag) return; const c = cellOf(e.target); if (!c) return; e.preventDefault();
+    const src = drag; drag = null; week.querySelectorAll('td.shift.over, td.shift.dragging').forEach((t) => t.classList.remove('over', 'dragging'));
+    if (c.day === src.day && c.id === src.id) return;
+    const from = cellText(src.day, src.id), to = cellText(c.day, c.id), fromOT = isOT(src.day, src.id), toOT = isOT(c.day, c.id);
+    const who = (id) => (S.employees.find((x) => x.id === id) || {}).name || '?';
+    if (e.ctrlKey) { setCell(c.day, c.id, from); setOT(c.day, c.id, fromOT); toast(`Copied ${from} to ${who(c.id)} on ${longDate(c.day)}`); }
+    else { setCell(c.day, c.id, from); setOT(c.day, c.id, fromOT); setCell(src.day, src.id, to); setOT(src.day, src.id, toOT); toast(to ? `Swapped: ${who(c.id)} ${longDate(c.day)} ↔ ${who(src.id)} ${longDate(src.day)}` : `Moved ${from} to ${who(c.id)} on ${longDate(c.day)}`); }
+    selDay = null; renderRange();
+  });
+  const clearDrag = () => { drag = null; week.querySelectorAll('td.shift.over, td.shift.dragging').forEach((t) => t.classList.remove('over', 'dragging')); };
+  week.addEventListener('dragend', clearDrag); document.addEventListener('dragend', clearDrag); document.addEventListener('drop', () => setTimeout(clearDrag, 0));
   week.addEventListener('click', (e) => {
     const ot = e.target.closest('button.ot'); if (ot) { setOT(ot.dataset.ot, ot.dataset.id, !isOT(ot.dataset.ot, ot.dataset.id)); renderRange(); return; }
     const so = e.target.closest('button.so'); if (so) { const on = !isSO(so.dataset.so, so.dataset.id); setSO(so.dataset.so, so.dataset.id, on); renderRange(); const nm = S.employees.find((x) => x.id === so.dataset.id); toast(on ? `${nm.name} scheduled off ${longDate(so.dataset.so)}` : `${nm.name} back to ${cellText(so.dataset.so, so.dataset.id) || 'off'} on ${longDate(so.dataset.so)}`); return; }
@@ -1139,7 +1189,8 @@
 
   // ---------- go ----------
   $('#startDate').value = wkStart(TODAY);
-  renderAll(); setMode('start'); dirty = false; renderFileLine();
+  // open straight on the two pay weeks that contain today's date on this computer
+  S.view.start = wkStart(TODAY); renderAll(); setMode('two'); dirty = false; renderFileLine();
 })();
 </script>
 </body>
