@@ -279,34 +279,33 @@
   .print-only { display: none; }
   [hidden] { display: none !important; }
   @media print {
-    @page { size: letter landscape; margin: 8mm; }
-    body { background: #fff; color: #000; font-size: 9pt; } body::before, body::after { display: none; }
-    .top, .quick, aside, .hint, .rangebar, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub, #startScreen, #yearCard, button.ot:not(.on), button.so, .grab { display: none !important; }
+    @page { size: letter landscape; margin: 6mm; }
+    body { background: #fff; color: #000; font-size: 12pt; } body::before, body::after { display: none; }
+    .top, .quick, aside, .hint, .rangebar, .toolbar, .x, #probCard, #dayPanel, .modal-bg, #toast, th.emp .sub, #startScreen, #yearCard, button.ot:not(.on), button.so, .grab, tr.hrsrow { display: none !important; }
     main { display: block; padding: 0; }
     .card, .card:nth-child(even) { box-shadow: none; margin: 0; border: none; border-radius: 0; overflow: visible; position: static; }
     .card > h2 { display: none; }
-    .print-only { display: block; font: 800 15pt var(--serif); padding: 0 0 4pt; color: #000; }
+    .print-only { display: block; font: 800 17pt var(--serif); padding: 0 0 5pt; color: #000; }
     .wrap { overflow: visible; padding: 0; }
     table.week { width: 100%; table-layout: fixed; border-spacing: 0; border-collapse: collapse; }
-    table.week th, table.week td { border: 1px solid #000 !important; padding: 2pt 3pt !important; color: #000 !important; background: #fff !important; position: static !important; border-radius: 0 !important; box-shadow: none !important; }
-    table.week th:first-child { width: 58pt; } table.week th:last-child, table.week td.status { display: none !important; }
-    table.week th.emp input.nm { font: 800 9.5pt var(--serif); padding: 0; border: none; background: #fff; color: #000; }
-    table.week td.date { font-size: 9pt; } table.week td.date small { font-size: 6.5pt; color: #000; }
+    table.week th, table.week td { border: 1.5px solid #000 !important; padding: 3pt 2pt !important; color: #000 !important; background: #fff !important; position: static !important; border-radius: 0 !important; box-shadow: none !important; }
+    table.week th:first-child { width: 62pt; } table.week th:last-child, table.week td.status { display: none !important; }
+    table.week thead th { height: 30pt; }
+    table.week th.emp input.nm { font: 800 14pt var(--serif); padding: 0; border: none; background: #fff; color: #000; width: 100%; text-align: center; }
+    table.week td { height: 37pt; }
+    table.week td.shift { position: relative !important; }
+    table.week td.date { font: 800 13pt var(--serif); padding-left: 4pt !important; }
+    table.week td.date small { font: 800 8pt var(--sans); color: #000; letter-spacing: .5px; }
     table.week tr.today td.date { color: #000; text-decoration: underline; }
-    table.week tr.wkfirst td { border-top: 3px double #000 !important; padding-top: 2pt !important; }
-    table.week td.shift input { min-width: 0; width: 100%; border: none !important; background: #fff !important; color: #000 !important; font-size: 8.5pt; padding: 1pt 0; border-radius: 0; font-weight: 700; opacity: 1 !important; font-style: normal; box-shadow: none; }
+    table.week tr.wkfirst td { border-top: 4px double #000 !important; }
+    /* cell type scales with how many people are on the page: 8 people = 13pt, capped at 14.5pt */
+    table.week td.shift input { min-width: 0; width: 100%; border: none !important; background: #fff !important; color: #000 !important; font-size: min(14.5pt, calc(104pt / var(--cols, 8))); letter-spacing: -.3pt; padding: 0; border-radius: 0; font-weight: 800; opacity: 1 !important; font-style: normal; box-shadow: none; text-align: center; }
     table.week td.shift input.bad, table.week td.shift input.unread, table.week td.shift input.offreq, table.week td.shift input.schedoff, table.week td.shift input.p0, table.week td.shift input.p1, table.week td.shift input.p2, table.week td.shift input.p3, table.week td.shift input.p4, table.week td.shift input.has { background: #fff !important; border: none !important; color: #000 !important; }
     table.week td.shift input.bad { text-decoration: underline; }
-    table.week td.shift input::placeholder { color: #000 !important; font-style: italic; font-weight: 600; opacity: 1; }
+    table.week td.shift input::placeholder { color: #000 !important; font-style: italic; font-weight: 700; opacity: 1; font-size: 10.5pt; letter-spacing: 0; }
     table.week td.shift input.offreq::placeholder { text-decoration: underline; }
     table.week td.shift.mgr input { font-style: italic; }
-    table.week td.shift button.ot.on { display: block; position: absolute; top: 0; right: 0; opacity: 1; background: #fff; color: #000; border: 1px solid #000; font-size: 6pt; width: auto; height: auto; padding: 0 2pt; box-shadow: none; line-height: 1.3; border-radius: 0; }
-    table.week td.status { font-size: 7pt; padding: 1pt !important; font-weight: 800; white-space: normal; }
-    table.week td.status.bad { text-decoration: underline; }
-    table.week td.hrs { font-size: 7.5pt; color: #000 !important; }
-    table.week td.hrs.over { font-weight: 900; text-decoration: underline; }
-    table.week td.hrs.mgr { opacity: 1; font-weight: 600; }
-    table.week tr.hrsrow td.date { font-size: 6.5pt; color: #000; }
+    table.week td.shift button.ot.on { display: block; position: absolute; top: 0; right: 0; opacity: 1; background: #fff; color: #000; border: 1px solid #000; font-size: 7pt; width: auto; height: auto; padding: 0 2pt; box-shadow: none; line-height: 1.3; border-radius: 0; font-weight: 800; }
   }
 </style>
 </head>
@@ -314,7 +313,7 @@
 
 <div class="top">
   <h1>ETC Schedule Maker<svg class="stroke" viewBox="0 0 300 12" preserveAspectRatio="none"><path d="M2 8 C 60 2, 120 11, 180 6 S 260 3, 298 7" fill="none" stroke="#e5643f" stroke-width="5" stroke-linecap="round"/></svg></h1>
-  <span class="ver" title="Program version">v1.7.6</span>
+  <span class="ver" title="Program version">v1.7.7</span>
   <span class="tag">thin openings, thin closings &amp; long weeks, caught before they happen</span>
   <div class="actions" id="topActions">
     <button id="autoBtn" class="primary">✨ Auto-complete</button>
@@ -500,7 +499,7 @@
 <script>
 (function () {
   'use strict';
-  const APP_VERSION = '1.7.6';
+  const APP_VERSION = '1.7.7';
   const LS_STATE = 'schedchk.state.v4', LS_VERS = 'schedchk.versions.v4';
   const OLD_VERS = ['schedchk.versions.v3', 'schedchk.versions.v2'];
   const DOW = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -923,7 +922,7 @@
       h += `<td class="status ${probs.length ? 'bad' : 'ok'}" data-view="${day}" title="${esc(stTitle)}">${esc(stText)}</td></tr>`;
       const next = dates[di + 1]; if (!next || wkStart(next) !== wkStart(day)) h += hoursRow(wkStart(day));
     });
-    $('#week').innerHTML = h + '</tbody>';
+    $('#week').innerHTML = h + '</tbody>'; $('#week').style.setProperty('--cols', S.employees.length);
   }
   function renderProblems() {
     const dates = viewDates(), rp = RP || rangeProblems(dates);
@@ -1248,6 +1247,9 @@
       }
       if (verNum(got) <= verNum(APP_VERSION)) throw new Error('GitHub is still serving v' + got + ' — try again in a minute');
       store(LS_STATE, S); try { sessionStorage.setItem('schedchk.justUpdated', got); } catch (err) {}
+      // the window keeps this page's globals, so the new page's script gets its own scope; old timers are stopped
+      html = html.replace(/<script>([\s\S]*?)<\/script>/, (m, js) => '<script>\n(function(){\n' + js + '\n})();\n<\/script>');
+      try { const tid = setTimeout(() => {}, 0); for (let k = 0; k <= tid; k++) { clearTimeout(k); clearInterval(k); } const rid = requestAnimationFrame(() => {}); for (let q = 0; q <= rid; q++) cancelAnimationFrame(q); } catch (err) {}
       document.open(); document.write(html); document.close();
     } catch (e) { btn.textContent = '⬆ Update to v' + remote; btn.disabled = false; toast('Update failed: ' + e.message + '. Closing and reopening the program will update it instead.'); }
   }
